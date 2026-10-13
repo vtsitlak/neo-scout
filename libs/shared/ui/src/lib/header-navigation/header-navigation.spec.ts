@@ -37,7 +37,9 @@ describe('HeaderNavigation', () => {
   it('should create', () => {
     // Arrange / Act / Assert
     expect(fixture.componentInstance).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('neo-header-navigation')).toBeTruthy();
+    expect(
+      fixture.nativeElement.querySelector('neo-header-navigation'),
+    ).toBeTruthy();
   });
 
   it('should project start and end placeholders', () => {
@@ -45,12 +47,12 @@ describe('HeaderNavigation', () => {
     const root = fixture.nativeElement as HTMLElement;
 
     // Assert
-    expect(root.querySelector('[data-testid="start-slot"]')?.textContent).toContain(
-      'Brand',
-    );
-    expect(root.querySelector('[data-testid="end-slot"]')?.textContent).toContain(
-      'End',
-    );
+    expect(
+      root.querySelector('[data-testid="start-slot"]')?.textContent,
+    ).toContain('Brand');
+    expect(
+      root.querySelector('[data-testid="end-slot"]')?.textContent,
+    ).toContain('End');
   });
 
   it('should render navigation buttons for each menu item', () => {
