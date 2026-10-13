@@ -5,7 +5,11 @@
   "scripts": {
     "start": "nx serve neo-scout",
     "build": "nx build neo-scout",
+    "build:pages": "nx build neo-scout --configuration=production --base-href=/neo-scout/",
     "test": "nx test neo-scout",
+    "lint": "nx run-many -t lint --all",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "e2e": "nx e2e neo-scout-e2e",
     "e2e:install": "playwright install"
   },
