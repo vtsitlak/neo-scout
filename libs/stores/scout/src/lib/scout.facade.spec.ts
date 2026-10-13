@@ -4,6 +4,7 @@ import {
   ScoutApiService,
   ScoutCandidate,
 } from '@neo-scout/api';
+import { ErrorToastService } from '@neo-scout/shared/services';
 import { of } from 'rxjs';
 import { ScoutFacade } from './scout.facade';
 import { DEFAULT_SCOUT_PAGE_SIZE } from './scout.models';
@@ -42,6 +43,7 @@ function candidate(
 describe('ScoutFacade', () => {
   let facade: ScoutFacade;
   let getCandidates: ReturnType<typeof vi.fn>;
+  let showError: ReturnType<typeof vi.fn>;
 
   const many: ScoutCandidate[] = Array.from({ length: 25 }, (_, i) =>
     candidate({
@@ -60,9 +62,13 @@ describe('ScoutFacade', () => {
 
   beforeEach(() => {
     getCandidates = vi.fn(() => of(sampleResponse));
+    showError = vi.fn();
 
     TestBed.configureTestingModule({
-      providers: [{ provide: ScoutApiService, useValue: { getCandidates } }],
+      providers: [
+        { provide: ScoutApiService, useValue: { getCandidates } },
+        { provide: ErrorToastService, useValue: { show: showError } },
+      ],
     });
 
     facade = TestBed.inject(ScoutFacade);
@@ -154,7 +160,9 @@ describe('ScoutFacade', () => {
     expect(facade.hasMore()).toBe(false);
   });
 
-  it('should expose handleError as a no-op', () => {
-    expect(() => facade.handleError(new Error('boom'))).not.toThrow();
+  it('should show an error toast via handleError', () => {
+    facade.handleError(new Error('Scout API failed'));
+
+    expect(showError).toHaveBeenCalledWith('Scout API failed');
   });
 });

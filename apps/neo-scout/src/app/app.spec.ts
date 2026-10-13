@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { ThemeStore } from '@neo-scout/stores/theme';
+import { MessageService } from 'primeng/api';
 import { App } from './app';
 import { appRoutes } from './app.routes';
 
@@ -8,7 +9,7 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter(appRoutes)],
+      providers: [provideRouter(appRoutes), MessageService],
     }).compileComponents();
   });
 
@@ -26,6 +27,7 @@ describe('App', () => {
     expect(compiled.querySelector('neo-theme-toggle')).toBeTruthy();
     expect(compiled.querySelector('router-outlet')).toBeTruthy();
     expect(compiled.querySelector('neo-info-footer')).toBeTruthy();
+    expect(compiled.querySelector('p-toast')).toBeTruthy();
     expect(fixture.componentInstance.logoSrc()).toBe('brand/logo.svg');
   });
 

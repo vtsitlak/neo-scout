@@ -14,6 +14,7 @@ import {
 } from '@neo-scout/shared/ui';
 import { ThemeStore } from '@neo-scout/stores/theme';
 import { Button } from 'primeng/button';
+import { Toast } from 'primeng/toast';
 import { APP_INFO } from './app-info.const';
 
 @Component({
@@ -21,6 +22,7 @@ import { APP_INFO } from './app-info.const';
     RouterModule,
     NgOptimizedImage,
     Button,
+    Toast,
     HeaderNavigation,
     ThemeToggle,
     InfoFooter,
