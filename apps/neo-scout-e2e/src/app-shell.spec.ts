@@ -10,13 +10,32 @@ test.describe('NEO Scout app shell', () => {
     });
   });
 
-  test('shows the document title, header, logo, and footer', async ({
+  test('shows the document title, header, logos, and footer', async ({
     page,
   }) => {
     await expect(page).toHaveTitle(/NEO Scout/);
     await expect(page.locator('neo-header-navigation')).toBeVisible();
-    await expect(page.getByRole('img', { name: 'NEO Scout' })).toHaveCount(1);
+    await expect(page.getByRole('img', { name: 'NEO Scout' })).toHaveCount(2);
     await expect(page.locator('neo-info-footer')).toBeVisible();
+  });
+
+  test('shows home intro and CTAs to Scout and Contact', async ({ page }) => {
+    await expect(page.locator('neo-home')).toBeVisible();
+    await expect(
+      page.getByText(/near-Earth asteroid candidates/i),
+    ).toBeVisible();
+
+    await page.getByRole('main').getByRole('button', { name: 'Scout' }).click();
+    await expect(page).toHaveURL(/\/scout$/);
+
+    await page.getByRole('button', { name: 'NEO Scout home' }).click();
+    await expect(page).toHaveURL(/\/$/);
+
+    await page
+      .getByRole('main')
+      .getByRole('button', { name: 'Contact' })
+      .click();
+    await expect(page).toHaveURL(/\/contact$/);
   });
 
   test('toggles between light and dark themes', async ({ page }) => {
@@ -32,8 +51,7 @@ test.describe('NEO Scout app shell', () => {
   }) => {
     const nav = page.getByRole('navigation', { name: 'Primary' });
 
-    // Empty stub hosts have no box; assert attachment + URL instead of visibility.
-    await expect(page.locator('neo-home')).toBeAttached();
+    await expect(page.locator('neo-home')).toBeVisible();
 
     await nav.getByRole('button', { name: 'Scout' }).click();
     await expect(page).toHaveURL(/\/scout$/);
@@ -45,6 +63,6 @@ test.describe('NEO Scout app shell', () => {
 
     await page.getByRole('button', { name: 'NEO Scout home' }).click();
     await expect(page).toHaveURL(/\/$/);
-    await expect(page.locator('neo-home')).toBeAttached();
+    await expect(page.locator('neo-home')).toBeVisible();
   });
 });
