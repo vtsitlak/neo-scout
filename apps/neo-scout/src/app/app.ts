@@ -34,8 +34,10 @@ export class App {
   protected readonly themeStore = inject(ThemeStore);
   protected readonly appInfo = APP_INFO;
 
-  /** Filled when app shell routes are wired. */
-  protected readonly navItems: readonly MenuItem[] = [];
+  protected readonly navItems: readonly MenuItem[] = [
+    { text: 'Scout', link: '/scout' },
+    { text: 'Contact', link: '/contact' },
+  ];
 
   /** Compact nav lockup — ThemeStore switch (not OS prefers-color-scheme). */
   readonly logoSrc = computed(() =>

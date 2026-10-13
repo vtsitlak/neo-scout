@@ -2,12 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { ThemeStore } from '@neo-scout/stores/theme';
 import { App } from './app';
+import { appRoutes } from './app.routes';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([])],
+      providers: [provideRouter(appRoutes)],
     }).compileComponents();
   });
 
@@ -26,6 +27,17 @@ describe('App', () => {
     expect(compiled.querySelector('router-outlet')).toBeTruthy();
     expect(compiled.querySelector('neo-info-footer')).toBeTruthy();
     expect(fixture.componentInstance.logoSrc()).toBe('brand/logo.svg');
+  });
+
+  it('should expose Scout and Contact nav items', () => {
+    // Arrange
+    const fixture = TestBed.createComponent(App);
+
+    // Act / Assert
+    expect(fixture.componentInstance['navItems']).toEqual([
+      { text: 'Scout', link: '/scout' },
+      { text: 'Contact', link: '/contact' },
+    ]);
   });
 
   it('should switch header logo path in dark mode', async () => {
