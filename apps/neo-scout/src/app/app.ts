@@ -20,7 +20,7 @@ type ScoutRow = {
 
 @Component({
   imports: [RouterModule, Button, AgGridAngular, NgOptimizedImage],
-  selector: 'app-root',
+  selector: 'neo-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
