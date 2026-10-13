@@ -8,8 +8,9 @@ import {
 import { RouterModule } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
-import { ThemeToggle } from '@neo-scout/shared/ui';
+import { InfoFooter, ThemeToggle } from '@neo-scout/shared/ui';
 import { ThemeStore } from '@neo-scout/stores/theme';
+import { APP_INFO } from './app-info.const';
 import { AppStore } from './app.store';
 import { gridThemeFor } from './theme/grid-theme';
 
@@ -19,7 +20,13 @@ type ScoutRow = {
 };
 
 @Component({
-  imports: [RouterModule, AgGridAngular, NgOptimizedImage, ThemeToggle],
+  imports: [
+    RouterModule,
+    AgGridAngular,
+    NgOptimizedImage,
+    ThemeToggle,
+    InfoFooter,
+  ],
   selector: 'neo-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -28,6 +35,7 @@ type ScoutRow = {
 export class App {
   protected readonly store = inject(AppStore);
   protected readonly themeStore = inject(ThemeStore);
+  protected readonly appInfo = APP_INFO;
 
   protected readonly gridTheme = computed(() =>
     gridThemeFor(this.themeStore.mode()),

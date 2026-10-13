@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ThemeStore } from '@neo-scout/stores/theme';
 import { ThemeToggle } from './theme-toggle';
 
@@ -10,7 +9,6 @@ describe('ThemeToggle', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ThemeToggle],
-      providers: [provideNoopAnimations()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ThemeToggle);
