@@ -4,21 +4,26 @@ test.describe('NEO Scout app shell', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await expect(
-      page.getByRole('heading', { level: 1, name: 'NEO Scout' }),
-    ).toBeVisible({ timeout: 60_000 });
+      page.getByRole('img', { name: 'NEO Scout' }).first(),
+    ).toBeVisible({
+      timeout: 60_000,
+    });
   });
 
-  test('shows the document and page titles', async ({ page }) => {
+  test('shows the document title and brand logos', async ({ page }) => {
     await expect(page).toHaveTitle(/NEO Scout/);
-    await expect(
-      page.getByRole('heading', { level: 1, name: 'NEO Scout' }),
-    ).toBeVisible();
+    await expect(page.getByRole('img', { name: 'NEO Scout' })).toHaveCount(2);
   });
 
-  test('shows the stack-ready action', async ({ page }) => {
+  test('toggles between light and dark themes', async ({ page }) => {
+    const toggle = page.getByRole('button', { name: /Dark mode|Light mode/i });
+
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+    await expect(page.locator('html')).toHaveClass(/dark/);
     await expect(
-      page.getByRole('button', { name: /Stack ready/i }),
-    ).toBeDisabled();
+      page.getByRole('button', { name: /Light mode/i }),
+    ).toBeVisible();
   });
 
   test('shows the community stack grid', async ({ page }) => {

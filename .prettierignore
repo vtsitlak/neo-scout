@@ -3,5 +3,10 @@
 /coverage
 /.nx/cache
 /.nx/workspace-data
-package-lock.json
+/package-lock.json
 .angular
+node_modules
+.cursor
+.agents
+.vscode
+*.mdc
