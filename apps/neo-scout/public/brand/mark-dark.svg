@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NEO Scout mark">
+  <title>NEO Scout</title>
+  <desc>Orbiting asteroid brand mark (dark)</desc>
+  <style>
+    .orbit { fill: none; stroke: #22d3ee; stroke-width: 2.5; }
+    .trail { fill: none; stroke: #fbbf24; stroke-width: 2; stroke-linecap: round; opacity: 0.9; }
+    .body { fill: #67e8f9; }
+    .crater { fill: #fbbf24; }
+    .shadow { fill: #0b1220; opacity: 0.35; }
+  </style>
+  <ellipse class="orbit" cx="32" cy="32" rx="22" ry="12" transform="rotate(-28 32 32)" />
+  <path class="trail" d="M14 40 C22 34, 28 30, 34 28" />
+  <circle class="body" cx="40" cy="26" r="7.5" />
+  <circle class="crater" cx="37.5" cy="24.5" r="1.6" />
+  <circle class="shadow" cx="42" cy="28" r="1.1" />
+</svg>

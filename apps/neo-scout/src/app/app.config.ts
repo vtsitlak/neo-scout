@@ -6,9 +6,9 @@ import {
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeuix/themes/aura';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { appRoutes } from './app.routes';
+import { NeoScoutPreset } from './theme/neo-scout.preset';
 
 /** AG Grid Community only — do not register Enterprise modules. */
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: NeoScoutPreset,
         options: {
           darkModeSelector: '.dark',
           cssLayer: {
