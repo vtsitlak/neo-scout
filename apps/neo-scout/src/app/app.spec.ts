@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { ThemeStore } from '@neo-scout/stores/theme';
 import { App } from './app';
-import { ThemeStore } from './theme/theme.store';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -22,7 +22,7 @@ describe('App', () => {
 
     // Assert
     expect(compiled.querySelectorAll('img[alt="NEO Scout"]').length).toBe(2);
-    expect(compiled.textContent).toContain('Dark mode');
+    expect(compiled.querySelector('neo-theme-toggle')).toBeTruthy();
     expect(fixture.componentInstance.logoSrc()).toBe('brand/logo.svg');
     expect(fixture.componentInstance.logoLgSrc()).toBe('brand/logo-lg.svg');
   });

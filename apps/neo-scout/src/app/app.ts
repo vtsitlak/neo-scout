@@ -8,10 +8,10 @@ import {
 import { RouterModule } from '@angular/router';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
-import { Button } from 'primeng/button';
+import { ThemeToggle } from '@neo-scout/shared/ui';
+import { ThemeStore } from '@neo-scout/stores/theme';
 import { AppStore } from './app.store';
 import { gridThemeFor } from './theme/grid-theme';
-import { ThemeStore } from './theme/theme.store';
 
 type ScoutRow = {
   name: string;
@@ -19,7 +19,7 @@ type ScoutRow = {
 };
 
 @Component({
-  imports: [RouterModule, Button, AgGridAngular, NgOptimizedImage],
+  imports: [RouterModule, AgGridAngular, NgOptimizedImage, ThemeToggle],
   selector: 'neo-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -31,10 +31,6 @@ export class App {
 
   protected readonly gridTheme = computed(() =>
     gridThemeFor(this.themeStore.mode()),
-  );
-
-  protected readonly themeToggleLabel = computed(() =>
-    this.themeStore.mode() === 'dark' ? 'Light mode' : 'Dark mode',
   );
 
   /** Compact nav lockup — ThemeStore switch (not OS prefers-color-scheme). */

@@ -1,2 +1,1 @@
-/** Shared UI public API — components land in follow-up issues. */
-export {};
+export * from './lib/theme-toggle/theme-toggle';

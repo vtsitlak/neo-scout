@@ -3,7 +3,7 @@ import {
   colorSchemeLightCold,
   themeQuartz,
 } from 'ag-grid-community';
-import type { ThemeMode } from './theme.store';
+import type { ThemeMode } from '@neo-scout/stores/theme';
 
 const sharedParams = {
   fontFamily: 'var(--font-sans)',

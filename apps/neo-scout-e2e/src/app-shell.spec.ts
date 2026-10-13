@@ -16,14 +16,11 @@ test.describe('NEO Scout app shell', () => {
   });
 
   test('toggles between light and dark themes', async ({ page }) => {
-    const toggle = page.getByRole('button', { name: /Dark mode|Light mode/i });
+    const toggle = page.getByRole('button', { name: 'Toggle color theme' });
 
     await expect(toggle).toBeVisible();
     await toggle.click();
     await expect(page.locator('html')).toHaveClass(/dark/);
-    await expect(
-      page.getByRole('button', { name: /Light mode/i }),
-    ).toBeVisible();
   });
 
   test('shows the community stack grid', async ({ page }) => {

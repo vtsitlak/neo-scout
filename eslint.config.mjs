@@ -28,7 +28,15 @@ export default [
             },
             {
               sourceTag: 'type:ui',
-              onlyDependOnLibsWithTags: ['type:ui', 'type:util'],
+              onlyDependOnLibsWithTags: [
+                'type:ui',
+                'type:util',
+                'type:data-access',
+              ],
+            },
+            {
+              sourceTag: 'type:data-access',
+              onlyDependOnLibsWithTags: ['type:data-access', 'type:util'],
             },
             {
               sourceTag: 'scope:pages',

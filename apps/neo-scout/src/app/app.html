@@ -13,12 +13,7 @@
         priority
         class="h-8 w-auto"
       />
-      <p-button
-        [label]="themeToggleLabel()"
-        [outlined]="true"
-        icon="pi pi-moon"
-        (onClick)="themeStore.toggle()"
-      />
+      <neo-theme-toggle />
     </header>
 
     <div class="flex flex-col gap-3">
