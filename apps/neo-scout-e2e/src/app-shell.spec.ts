@@ -10,9 +10,13 @@ test.describe('NEO Scout app shell', () => {
     });
   });
 
-  test('shows the document title and brand logos', async ({ page }) => {
+  test('shows the document title, header, logo, and footer', async ({
+    page,
+  }) => {
     await expect(page).toHaveTitle(/NEO Scout/);
-    await expect(page.getByRole('img', { name: 'NEO Scout' })).toHaveCount(2);
+    await expect(page.locator('neo-header-navigation')).toBeVisible();
+    await expect(page.getByRole('img', { name: 'NEO Scout' })).toHaveCount(1);
+    await expect(page.locator('neo-info-footer')).toBeVisible();
   });
 
   test('toggles between light and dark themes', async ({ page }) => {
@@ -21,27 +25,5 @@ test.describe('NEO Scout app shell', () => {
     await expect(toggle).toBeVisible();
     await toggle.click();
     await expect(page.locator('html')).toHaveClass(/dark/);
-  });
-
-  test('shows the community stack grid', async ({ page }) => {
-    const grid = page.getByRole('grid');
-
-    await expect(grid).toBeVisible();
-    await expect(
-      grid.getByRole('columnheader', { name: 'Name' }),
-    ).toBeVisible();
-    await expect(
-      grid.getByRole('columnheader', { name: 'Status' }),
-    ).toBeVisible();
-    await expect(
-      grid.getByRole('gridcell', { name: 'Workspace' }),
-    ).toBeVisible();
-    await expect(
-      grid.getByRole('gridcell', { name: 'Initialized' }),
-    ).toBeVisible();
-    await expect(grid.getByRole('gridcell', { name: 'PrimeNG' })).toBeVisible();
-    await expect(
-      grid.getByRole('gridcell', { name: 'AG Grid Community' }),
-    ).toBeVisible();
   });
 });

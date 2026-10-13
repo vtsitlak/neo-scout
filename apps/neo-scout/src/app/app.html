@@ -1,7 +1,12 @@
 <div class="flex min-h-screen flex-col bg-(--ns-bg) text-(--ns-fg)">
-  <main class="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-8">
-    <header
-      class="flex flex-wrap items-center justify-between gap-4 border-b border-(--ns-border) pb-4"
+  <neo-header-navigation [items]="navItems">
+    <p-button
+      startPlaceholder
+      type="button"
+      [text]="true"
+      severity="secondary"
+      ariaLabel="NEO Scout"
+      class="p-1!"
     >
       <img
         [ngSrc]="logoSrc()"
@@ -11,34 +16,12 @@
         priority
         class="h-8 w-auto"
       />
-      <neo-theme-toggle />
-    </header>
+    </p-button>
 
-    <div class="flex flex-col gap-3">
-      <img
-        [ngSrc]="logoLgSrc()"
-        alt="NEO Scout"
-        width="280"
-        height="72"
-        class="h-18 w-auto max-w-full"
-      />
-      <p class="max-w-2xl text-base text-(--ns-fg-muted)">
-        Modern scientific scout workspace — shared tokens drive Tailwind,
-        PrimeNG, and AG Grid across light and dark themes.
-      </p>
-    </div>
+    <neo-theme-toggle endPlaceholder />
+  </neo-header-navigation>
 
-    <div
-      class="h-64 w-full overflow-hidden rounded-xl border border-(--ns-border) bg-(--ns-bg-elevated)"
-    >
-      <ag-grid-angular
-        class="h-full w-full"
-        [theme]="gridTheme()"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-      />
-    </div>
-
+  <main class="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
     <router-outlet />
   </main>
 

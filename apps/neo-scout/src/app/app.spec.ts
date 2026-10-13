@@ -11,7 +11,7 @@ describe('App', () => {
     }).compileComponents();
   });
 
-  it('should render brand SVG assets, theme toggle, and info footer', async () => {
+  it('should render header, logo, theme toggle, router outlet, and footer', async () => {
     // Arrange
     const fixture = TestBed.createComponent(App);
 
@@ -20,14 +20,15 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
 
     // Assert
-    expect(compiled.querySelectorAll('img[alt="NEO Scout"]').length).toBe(2);
+    expect(compiled.querySelector('neo-header-navigation')).toBeTruthy();
+    expect(compiled.querySelector('img[alt="NEO Scout"]')).toBeTruthy();
     expect(compiled.querySelector('neo-theme-toggle')).toBeTruthy();
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
     expect(compiled.querySelector('neo-info-footer')).toBeTruthy();
     expect(fixture.componentInstance.logoSrc()).toBe('brand/logo.svg');
-    expect(fixture.componentInstance.logoLgSrc()).toBe('brand/logo-lg.svg');
   });
 
-  it('should switch brand SVG paths in dark mode', async () => {
+  it('should switch header logo path in dark mode', async () => {
     // Arrange
     const fixture = TestBed.createComponent(App);
     const themeStore = TestBed.inject(ThemeStore);
@@ -38,8 +39,5 @@ describe('App', () => {
 
     // Assert
     expect(fixture.componentInstance.logoSrc()).toBe('brand/logo-dark.svg');
-    expect(fixture.componentInstance.logoLgSrc()).toBe(
-      'brand/logo-lg-dark.svg',
-    );
   });
 });
