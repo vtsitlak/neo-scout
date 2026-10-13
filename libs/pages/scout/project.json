@@ -1,0 +1,20 @@
+{
+  "name": "pages-scout",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/pages/scout/src",
+  "prefix": "neo",
+  "projectType": "library",
+  "tags": ["type:feature", "scope:pages"],
+  "targets": {
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "coverage/libs/pages/scout"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

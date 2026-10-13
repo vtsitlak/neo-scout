@@ -106,3 +106,6 @@ apps/*/public/favicon-16.png
 apps/*/public/favicon-32.png
 apps/*/public/apple-touch-icon.png
 **/brand/*.png
+
+.angular
+.vitest
