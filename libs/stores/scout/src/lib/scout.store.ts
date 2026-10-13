@@ -1,5 +1,6 @@
 import { computed, effect, inject } from '@angular/core';
 import { ScoutCandidate } from '@neo-scout/api';
+import { ErrorToastService } from '@neo-scout/shared/services';
 import {
   patchState,
   signalStore,
@@ -102,6 +103,16 @@ function applySort(
   return sorted;
 }
 
+function toErrorMessage(error: unknown): string {
+  if (typeof error === 'string' && error.trim()) {
+    return error.trim();
+  }
+  if (error instanceof Error && error.message.trim()) {
+    return error.message.trim();
+  }
+  return 'Something went wrong. Please try again.';
+}
+
 export const ScoutStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
@@ -138,127 +149,128 @@ export const ScoutStore = signalStore(
       totalFiltered,
     };
   }),
-  withMethods((store, dataService = inject(ScoutDataService)) => ({
-    loadAll(): void {
-      patchState(store, {
-        isLoadingAll: true,
-        isLoadingMore: false,
-        error: null,
-      });
-      dataService.load();
-    },
-
-    /** Force refresh from the Scout API (same source as loadAll). */
-    reload(): void {
-      patchState(store, {
-        isLoadingAll: true,
-        isLoadingMore: false,
-        error: null,
-      });
-      dataService.reload();
-    },
-
-    getById(objectName: string): void {
-      patchState(store, {
-        isLoadingById: true,
-        selectedId: objectName,
-        error: null,
-      });
-
-      const existing = store
-        .candidates()
-        .find((candidate) => candidate.objectName === objectName);
-
-      if (existing) {
-        patchState(store, { isLoadingById: false, pendingSelectedId: null });
-        return;
-      }
-
-      if (store.candidates().length === 0) {
-        patchState(store, { pendingSelectedId: objectName });
+  withMethods(
+    (
+      store,
+      dataService = inject(ScoutDataService),
+      errorToast = inject(ErrorToastService),
+    ) => ({
+      loadAll(): void {
+        patchState(store, {
+          isLoadingAll: true,
+          isLoadingMore: false,
+          error: null,
+        });
         dataService.load();
-        return;
-      }
+      },
 
-      patchState(store, {
-        isLoadingById: false,
-        selectedId: null,
-        pendingSelectedId: null,
-      });
-    },
+      /** Force refresh from the Scout API (same source as loadAll). */
+      reload(): void {
+        patchState(store, {
+          isLoadingAll: true,
+          isLoadingMore: false,
+          error: null,
+        });
+        dataService.reload();
+      },
 
-    setSearch(query: string): void {
-      patchState(store, {
-        searchQuery: query,
-        visibleCount: store.pageSize(),
-        isLoadingMore: false,
-      });
-    },
+      getById(objectName: string): void {
+        patchState(store, {
+          isLoadingById: true,
+          selectedId: objectName,
+          error: null,
+        });
 
-    setFilter(filter: ScoutFilter): void {
-      patchState(store, {
-        filter,
-        visibleCount: store.pageSize(),
-        isLoadingMore: false,
-      });
-    },
+        const existing = store
+          .candidates()
+          .find((candidate) => candidate.objectName === objectName);
 
-    patchFilter(partial: Partial<ScoutFilter>): void {
-      patchState(store, {
-        filter: { ...store.filter(), ...partial },
-        visibleCount: store.pageSize(),
-        isLoadingMore: false,
-      });
-    },
+        if (existing) {
+          patchState(store, { isLoadingById: false, pendingSelectedId: null });
+          return;
+        }
 
-    setSort(
-      field: ScoutSortField,
-      direction: ScoutSortDirection = 'asc',
-    ): void {
-      patchState(store, {
-        sort: { field, direction },
-        visibleCount: store.pageSize(),
-        isLoadingMore: false,
-      });
-    },
+        if (store.candidates().length === 0) {
+          patchState(store, { pendingSelectedId: objectName });
+          dataService.load();
+          return;
+        }
 
-    loadMore(): void {
-      if (!store.hasMore() || store.isLoadingMore()) {
-        return;
-      }
-      patchState(store, { isLoadingMore: true });
-      patchState(store, {
-        visibleCount: store.visibleCount() + store.pageSize(),
-      });
-      queueMicrotask(() => {
-        patchState(store, { isLoadingMore: false });
-      });
-    },
+        patchState(store, {
+          isLoadingById: false,
+          selectedId: null,
+          pendingSelectedId: null,
+        });
+      },
 
-    resetVisible(): void {
-      patchState(store, {
-        visibleCount: store.pageSize(),
-        isLoadingMore: false,
-      });
-    },
+      setSearch(query: string): void {
+        patchState(store, {
+          searchQuery: query,
+          visibleCount: store.pageSize(),
+          isLoadingMore: false,
+        });
+      },
 
-    clearSelection(): void {
-      patchState(store, {
-        selectedId: null,
-        pendingSelectedId: null,
-        isLoadingById: false,
-      });
-    },
+      setFilter(filter: ScoutFilter): void {
+        patchState(store, {
+          filter,
+          visibleCount: store.pageSize(),
+          isLoadingMore: false,
+        });
+      },
 
-    /**
-     * Error handling hook — intentionally empty for now.
-     * Real UX (toast / retry) lands in a follow-up issue.
-     */
-    handleError(error: unknown): void {
-      void error;
-      // no-op — filled in a later issue
-    },
-  })),
+      patchFilter(partial: Partial<ScoutFilter>): void {
+        patchState(store, {
+          filter: { ...store.filter(), ...partial },
+          visibleCount: store.pageSize(),
+          isLoadingMore: false,
+        });
+      },
+
+      setSort(
+        field: ScoutSortField,
+        direction: ScoutSortDirection = 'asc',
+      ): void {
+        patchState(store, {
+          sort: { field, direction },
+          visibleCount: store.pageSize(),
+          isLoadingMore: false,
+        });
+      },
+
+      loadMore(): void {
+        if (!store.hasMore() || store.isLoadingMore()) {
+          return;
+        }
+        patchState(store, { isLoadingMore: true });
+        patchState(store, {
+          visibleCount: store.visibleCount() + store.pageSize(),
+        });
+        queueMicrotask(() => {
+          patchState(store, { isLoadingMore: false });
+        });
+      },
+
+      resetVisible(): void {
+        patchState(store, {
+          visibleCount: store.pageSize(),
+          isLoadingMore: false,
+        });
+      },
+
+      clearSelection(): void {
+        patchState(store, {
+          selectedId: null,
+          pendingSelectedId: null,
+          isLoadingById: false,
+        });
+      },
+
+      handleError(error: unknown): void {
+        errorToast.show(toErrorMessage(error));
+      },
+    }),
+  ),
   withHooks({
     onInit(store, dataService = inject(ScoutDataService)) {
       effect(() => {
