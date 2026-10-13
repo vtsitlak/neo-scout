@@ -1,18 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { ThemeStore } from '@neo-scout/stores/theme';
 import { App } from './app';
-import { ThemeStore } from './theme/theme.store';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([]), provideNoopAnimations()],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
-  it('should render brand SVG assets and theme toggle', async () => {
+  it('should render header, logo, theme toggle, router outlet, and footer', async () => {
     // Arrange
     const fixture = TestBed.createComponent(App);
 
@@ -21,13 +20,15 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
 
     // Assert
-    expect(compiled.querySelectorAll('img[alt="NEO Scout"]').length).toBe(2);
-    expect(compiled.textContent).toContain('Dark mode');
+    expect(compiled.querySelector('neo-header-navigation')).toBeTruthy();
+    expect(compiled.querySelector('img[alt="NEO Scout"]')).toBeTruthy();
+    expect(compiled.querySelector('neo-theme-toggle')).toBeTruthy();
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
+    expect(compiled.querySelector('neo-info-footer')).toBeTruthy();
     expect(fixture.componentInstance.logoSrc()).toBe('brand/logo.svg');
-    expect(fixture.componentInstance.logoLgSrc()).toBe('brand/logo-lg.svg');
   });
 
-  it('should switch brand SVG paths in dark mode', async () => {
+  it('should switch header logo path in dark mode', async () => {
     // Arrange
     const fixture = TestBed.createComponent(App);
     const themeStore = TestBed.inject(ThemeStore);
@@ -38,8 +39,5 @@ describe('App', () => {
 
     // Assert
     expect(fixture.componentInstance.logoSrc()).toBe('brand/logo-dark.svg');
-    expect(fixture.componentInstance.logoLgSrc()).toBe(
-      'brand/logo-lg-dark.svg',
-    );
   });
 });

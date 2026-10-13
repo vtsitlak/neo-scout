@@ -18,7 +18,8 @@
       "@neo-scout/pages/home": ["./libs/pages/home/src/index.ts"],
       "@neo-scout/pages/scout": ["./libs/pages/scout/src/index.ts"],
       "@neo-scout/pages/contact": ["./libs/pages/contact/src/index.ts"],
-      "@neo-scout/shared/ui": ["./libs/shared/ui/src/index.ts"]
+      "@neo-scout/shared/ui": ["./libs/shared/ui/src/index.ts"],
+      "@neo-scout/stores/theme": ["./libs/stores/theme/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
