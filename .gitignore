@@ -1,0 +1,84 @@
+# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# compiled output
+dist
+tmp
+out-tsc
+
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode / Cursor (local only; keep shared snippets optional)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Cursor local tooling (rules, skills, agents, MCP dumps — kept out of the repo)
+.cursor/
+.cursorrules
+AGENTS.md
+.agents/
+**/agent-transcripts/
+.claude/
+.codex/
+.gemini/
+.opencode/
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Nx
+.nx/cache
+.nx/workspace-data
+.nx/migrate-runs
+.nx/installation
+.nx/powerpack
+.claude/worktrees
+.claude/settings.local.json
+
+# Angular
+.angular
+
+# Playwright
+**/test-results/
+**/playwright-report/
+**/blob-report/
+**/playwright/.cache/
+**/e2e/.auth/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+service-account*.json
+**/credentials*.json
+**/secrets/
+
+# OS / tooling noise
+*.log
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
