@@ -22,6 +22,7 @@
       "@neo-scout/stores/theme": ["./libs/stores/theme/src/index.ts"],
       "@neo-scout/api": ["./libs/api/src/index.ts"],
       "@neo-scout/stores/scout": ["./libs/stores/scout/src/index.ts"],
+      "@neo-scout/stores/contact": ["./libs/stores/contact/src/index.ts"],
       "@neo-scout/shared/services": ["./libs/shared/services/src/index.ts"]
     }
   },

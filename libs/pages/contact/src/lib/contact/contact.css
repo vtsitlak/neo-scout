@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* FormField sets `required` on empty fields; suppress browser :invalid chrome. */
+:host input:invalid,
+:host textarea:invalid,
+:host select:invalid {
+  box-shadow: none;
+}

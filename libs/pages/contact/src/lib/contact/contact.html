@@ -1,0 +1,193 @@
+<section class="mx-auto flex w-full max-w-5xl flex-col gap-8 py-4 sm:py-8">
+  <header class="mx-auto max-w-2xl text-center">
+    <h1
+      class="font-display m-0 text-3xl tracking-tight text-[var(--ns-fg)] sm:text-4xl"
+    >
+      Contact NEO Scout
+    </h1>
+    <p class="mt-3 text-base text-[var(--ns-fg-muted)] sm:text-lg">
+      Questions about the Scout board, data sources, or collaboration? Reach out
+      below — we read every note.
+    </p>
+  </header>
+
+  <div
+    class="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_auto_minmax(0,1.1fr)] lg:items-start"
+  >
+    <aside class="flex flex-col gap-8" aria-label="Company contact details">
+      <div class="flex flex-col gap-2">
+        <h2 class="m-0 text-sm font-semibold text-[var(--ns-fg)]">Office</h2>
+        <p class="m-0 text-sm leading-relaxed text-[var(--ns-fg-muted)]">
+          NEO Scout<br />
+          Near-Earth Object desk<br />
+          Remote-first · UTC
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+          <h2 class="m-0 text-sm font-semibold text-[var(--ns-fg)]">Support</h2>
+          <a
+            class="text-sm text-[var(--ns-primary)] hover:underline"
+            href="mailto:vtsitlak@gmail.com"
+            >vtsitlak@gmail.com</a
+          >
+          <p class="m-0 text-xs text-[var(--ns-fg-muted)]">
+            Product help and Scout data questions
+          </p>
+        </div>
+        <div class="flex flex-col gap-1">
+          <h2 class="m-0 text-sm font-semibold text-[var(--ns-fg)]">Press</h2>
+          <a
+            class="text-sm text-[var(--ns-primary)] hover:underline"
+            href="mailto:vtsitlak@gmail.com"
+            >vtsitlak@gmail.com</a
+          >
+          <p class="m-0 text-xs text-[var(--ns-fg-muted)]">
+            Interviews and project features
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <h2 class="m-0 text-sm font-semibold text-[var(--ns-fg)]">Social</h2>
+        <div class="flex flex-wrap gap-2">
+          <a
+            class="inline-flex size-10 items-center justify-center rounded-md border border-[var(--ns-border)] text-[var(--ns-fg-muted)] transition-colors hover:border-[var(--ns-primary)] hover:text-[var(--ns-primary)]"
+            href="https://github.com/vtsitlak/neo-scout"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="NEO Scout on GitHub"
+          >
+            <i class="pi pi-github text-lg" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <p-divider layout="vertical" class="hidden! lg:block!" />
+    <p-divider class="lg:hidden!" />
+
+    <div class="min-w-0">
+      @if (showSuccess()) {
+      <div
+        class="flex flex-col gap-4 rounded-lg border border-[var(--ns-border)] bg-[var(--ns-bg-elevated)] p-6"
+        role="status"
+        aria-live="polite"
+        aria-label="Message sent successfully"
+      >
+        <p-message
+          severity="success"
+          text="Thanks — your message was sent. We will get back to you soon."
+          styleClass="w-full"
+        />
+        @if (lastInquiry(); as sent) {
+        <p class="m-0 text-sm text-[var(--ns-fg-muted)]">
+          Sent as <span class="text-[var(--ns-fg)]">{{ sent.name }}</span> · {{
+          sent.workEmail }}
+        </p>
+        }
+        <div class="flex justify-end">
+          <p-button
+            label="Send another message"
+            icon="pi pi-envelope"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="sendAnother()"
+          />
+        </div>
+      </div>
+      } @else {
+      <form
+        class="flex flex-col gap-4"
+        novalidate
+        aria-label="Contact inquiry form"
+        (submit)="$event.preventDefault(); onSubmit()"
+      >
+        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
+          <span>Name <span class="text-[var(--ns-fg-muted)]">*</span></span>
+          <input
+            type="text"
+            [class]="fieldClass(inquiryForm.name)"
+            autocomplete="name"
+            aria-label="Name"
+            [formField]="inquiryForm.name"
+          />
+          @if (fieldError(inquiryForm.name); as error) {
+          <span class="text-xs text-red-500" role="alert">{{ error }}</span>
+          }
+        </label>
+
+        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
+          <span
+            >Work email <span class="text-[var(--ns-fg-muted)]">*</span></span
+          >
+          <input
+            type="email"
+            [class]="fieldClass(inquiryForm.workEmail)"
+            autocomplete="email"
+            aria-label="Work email"
+            [formField]="inquiryForm.workEmail"
+          />
+          @if (fieldError(inquiryForm.workEmail); as error) {
+          <span class="text-xs text-red-500" role="alert">{{ error }}</span>
+          }
+        </label>
+
+        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
+          <span
+            >Company
+            <span class="text-[var(--ns-fg-muted)]">(optional)</span></span
+          >
+          <input
+            type="text"
+            [class]="fieldClass(inquiryForm.company)"
+            autocomplete="organization"
+            aria-label="Company"
+            [formField]="inquiryForm.company"
+          />
+        </label>
+
+        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
+          <span
+            >Employee count
+            <span class="text-[var(--ns-fg-muted)]">(optional)</span></span
+          >
+          <select
+            [class]="fieldClass(inquiryForm.employeeCount)"
+            aria-label="Employee count"
+            [formField]="inquiryForm.employeeCount"
+          >
+            @for (option of employeeCountOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
+          <span>Message <span class="text-[var(--ns-fg-muted)]">*</span></span>
+          <textarea
+            rows="5"
+            [class]="fieldClass(inquiryForm.message)"
+            aria-label="Message"
+            [formField]="inquiryForm.message"
+          ></textarea>
+          @if (fieldError(inquiryForm.message); as error) {
+          <span class="text-xs text-red-500" role="alert">{{ error }}</span>
+          }
+        </label>
+
+        <div class="flex justify-end pt-1">
+          <p-button
+            type="submit"
+            label="Send message"
+            icon="pi pi-send"
+            [loading]="isSubmitting()"
+            [disabled]="isSubmitting()"
+          />
+        </div>
+      </form>
+      }
+    </div>
+  </div>
+</section>
