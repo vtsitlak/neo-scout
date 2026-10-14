@@ -91,6 +91,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # JPL Scout has no browser CORS; Pages serves a same-origin snapshot instead.
+      - name: Fetch Scout API snapshot
+        run: |
+          curl -fsSL "https://ssd-api.jpl.nasa.gov/scout.api" \
+            -o apps/neo-scout/public/scout.api.json
+          test -s apps/neo-scout/public/scout.api.json
+
       - name: Build for GitHub Pages
         run: npm run build:pages
 

@@ -113,6 +113,6 @@ You do **not** need a long-lived release branch beyond the version bump.
 
 - **Full Scout list client-side** — the public Scout API has no paging; search/filter/sort run in the Scout store over the loaded list.
 - **Contact submit is simulated** — no backend; the contact store fakes success/failure for UX demos.
-- **Dev proxy for Scout** — production/Pages call the NASA URL directly; local serve uses `/api/scout`.
+- **Dev proxy for Scout** — local serve uses `/api/scout` → JPL. GitHub Pages cannot call JPL from the browser (CORS), so CI fetches a same-origin `scout.api.json` snapshot at deploy time (data refreshes on each Pages deploy).
 - **SPA on Pages** — CI copies `index.html` to `404.html` so deep links work on GitHub Pages.
 - **Scores are interest flags** — Scout NEO/PHA scores are not rigorous impact probabilities; “hazard interest” in the UI is a simple blend for display.
