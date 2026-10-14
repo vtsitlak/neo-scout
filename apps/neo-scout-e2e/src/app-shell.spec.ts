@@ -21,9 +21,8 @@ test.describe('NEO Scout app shell', () => {
 
   test('shows home intro and CTAs to Scout and Contact', async ({ page }) => {
     await expect(page.locator('neo-home')).toBeVisible();
-    await expect(
-      page.getByText(/near-Earth asteroid candidates/i),
-    ).toBeVisible();
+    await expect(page.getByText(/near-Earth objects \(NEOs\)/i)).toBeVisible();
+    await expect(page.getByText(/NASA\/JPL Scout/i).first()).toBeVisible();
 
     await page.getByRole('main').getByRole('button', { name: 'Scout' }).click();
     await expect(page).toHaveURL(/\/scout$/);

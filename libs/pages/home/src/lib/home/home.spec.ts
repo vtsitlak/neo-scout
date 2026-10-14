@@ -27,7 +27,8 @@ describe('Home', () => {
 
     // Assert
     expect(root.querySelector('img[alt="NEO Scout"]')).toBeTruthy();
-    expect(root.textContent).toContain('near-Earth asteroid candidates');
+    expect(root.textContent).toContain('near-Earth objects (NEOs)');
+    expect(root.textContent).toContain('NASA/JPL Scout');
     expect(root.textContent).toContain('Scout');
     expect(root.textContent).toContain('Contact');
     expect(fixture.componentInstance.logoLgSrc()).toBe('brand/logo-lg.svg');
