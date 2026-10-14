@@ -1,24 +1,45 @@
 import { ScoutCandidate } from '@neo-scout/api';
 import type { ColDef, ValueGetterParams } from 'ag-grid-community';
+import { ScoutColumnInnerHeader } from './scout-column-inner-header';
+import {
+  SCOUT_FIELD_META,
+  SCOUT_ROW_NUMBER_META,
+} from './scout-field-meta';
+
+const withPrimeHeaderTooltip = (
+  headerName: string,
+  description: string,
+): Pick<ColDef<ScoutCandidate>, 'headerName' | 'headerComponentParams'> => ({
+  headerName,
+  headerComponentParams: {
+    innerHeaderComponent: ScoutColumnInnerHeader,
+    innerHeaderComponentParams: { description },
+  },
+});
 
 const sortableField = (
   field: keyof ScoutCandidate,
-  headerName: string,
   minWidth = 110,
-): ColDef<ScoutCandidate> => ({
-  field,
-  headerName,
-  sortable: true,
-  filter: false,
-  resizable: true,
-  minWidth,
-  flex: 1,
-});
+): ColDef<ScoutCandidate> => {
+  const meta = SCOUT_FIELD_META[field];
+  return {
+    field,
+    ...withPrimeHeaderTooltip(meta.label, meta.description),
+    sortable: true,
+    filter: false,
+    resizable: true,
+    minWidth,
+    flex: 1,
+  };
+};
 
 /** Display index only — not a data field, so not sortable. */
 const rowNumberColumn: ColDef<ScoutCandidate> = {
   colId: 'rowNumber',
-  headerName: '#',
+  ...withPrimeHeaderTooltip(
+    SCOUT_ROW_NUMBER_META.label,
+    SCOUT_ROW_NUMBER_META.description,
+  ),
   width: 64,
   maxWidth: 72,
   pinned: 'left',
@@ -36,14 +57,14 @@ const rowNumberColumn: ColDef<ScoutCandidate> = {
  */
 export const SCOUT_COLUMN_DEFS: ColDef<ScoutCandidate>[] = [
   rowNumberColumn,
-  sortableField('objectName', 'Object', 120),
-  sortableField('neoScore', 'NEO score', 120),
-  sortableField('phaScore', 'PHA score', 120),
-  sortableField('caDist', 'Close approach', 140),
-  sortableField('moid', 'MOID', 100),
-  sortableField('H', 'Abs. magnitude (H)', 160),
-  sortableField('Vmag', 'Apparent mag.', 140),
-  sortableField('nObs', 'Observations', 130),
-  sortableField('arc', 'Arc (days)', 120),
-  sortableField('lastRun', 'Last run', 140),
+  sortableField('objectName', 120),
+  sortableField('neoScore', 120),
+  sortableField('phaScore', 120),
+  sortableField('caDist', 140),
+  sortableField('moid', 100),
+  sortableField('H', 160),
+  sortableField('Vmag', 140),
+  sortableField('nObs', 130),
+  sortableField('arc', 120),
+  sortableField('lastRun', 140),
 ];

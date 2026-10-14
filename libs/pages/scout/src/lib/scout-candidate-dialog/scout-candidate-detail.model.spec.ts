@@ -15,6 +15,15 @@ describe('scout-candidate-detail.model', () => {
     expect(keys.length).toBe(23);
   });
 
+  it('should include a short description on every detail field', () => {
+    for (const section of SCOUT_DETAIL_SECTIONS) {
+      for (const field of section.fields) {
+        expect(field.label.length).toBeGreaterThan(0);
+        expect(field.description.length).toBeGreaterThan(10);
+      }
+    }
+  });
+
   it('should format nullish values as an em dash', () => {
     expect(formatScoutDetailValue(null)).toBe('—');
     expect(formatScoutDetailValue(undefined)).toBe('—');

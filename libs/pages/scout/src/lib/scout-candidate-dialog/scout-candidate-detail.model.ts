@@ -1,8 +1,10 @@
 import { ScoutCandidate } from '@neo-scout/api';
+import { SCOUT_FIELD_META } from '../scout/scout-field-meta';
 
 export interface ScoutDetailField {
   key: keyof ScoutCandidate;
   label: string;
+  description: string;
 }
 
 export interface ScoutDetailSection {
@@ -10,55 +12,58 @@ export interface ScoutDetailSection {
   fields: ScoutDetailField[];
 }
 
+const field = (key: keyof ScoutCandidate): ScoutDetailField => ({
+  key,
+  label: SCOUT_FIELD_META[key].label,
+  description: SCOUT_FIELD_META[key].description,
+});
+
 /** Grouped fields for the candidate detail dialog (full ScoutCandidate). */
 export const SCOUT_DETAIL_SECTIONS: ScoutDetailSection[] = [
   {
     title: 'Scores',
     fields: [
-      { key: 'neoScore', label: 'NEO score' },
-      { key: 'phaScore', label: 'PHA score' },
-      { key: 'neo1kmScore', label: 'NEO 1 km score' },
-      { key: 'ieoScore', label: 'IEO score' },
-      { key: 'geocentricScore', label: 'Geocentric score' },
-      { key: 'tisserandScore', label: 'Tisserand score' },
-      { key: 'rating', label: 'Rating' },
+      field('neoScore'),
+      field('phaScore'),
+      field('neo1kmScore'),
+      field('ieoScore'),
+      field('geocentricScore'),
+      field('tisserandScore'),
+      field('rating'),
     ],
   },
   {
     title: 'Orbit & approach',
     fields: [
-      { key: 'moid', label: 'MOID' },
-      { key: 'caDist', label: 'Close approach' },
-      { key: 'H', label: 'Abs. magnitude (H)' },
-      { key: 'Vmag', label: 'Apparent mag.' },
-      { key: 'vInf', label: 'v∞' },
+      field('moid'),
+      field('caDist'),
+      field('H'),
+      field('Vmag'),
+      field('vInf'),
     ],
   },
   {
     title: 'Observations',
     fields: [
-      { key: 'nObs', label: 'Observations' },
-      { key: 'arc', label: 'Arc (days)' },
-      { key: 'rmsN', label: 'RMS' },
-      { key: 'unc', label: 'Uncertainty' },
-      { key: 'uncP1', label: 'Uncertainty (+1 day)' },
+      field('nObs'),
+      field('arc'),
+      field('rmsN'),
+      field('unc'),
+      field('uncP1'),
     ],
   },
   {
     title: 'Sky position',
     fields: [
-      { key: 'ra', label: 'RA' },
-      { key: 'dec', label: 'Dec' },
-      { key: 'elong', label: 'Elongation' },
-      { key: 'rate', label: 'Rate' },
+      field('ra'),
+      field('dec'),
+      field('elong'),
+      field('rate'),
     ],
   },
   {
     title: 'Timing',
-    fields: [
-      { key: 'lastRun', label: 'Last run' },
-      { key: 'tEphem', label: 'Ephemeris time' },
-    ],
+    fields: [field('lastRun'), field('tEphem')],
   },
 ];
 

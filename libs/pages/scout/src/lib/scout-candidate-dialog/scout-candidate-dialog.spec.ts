@@ -75,6 +75,25 @@ describe('ScoutCandidateDialog', () => {
     expect(root.textContent).toContain('Hazard interest: 30');
   });
 
+  it('should bind descriptions for Prime tooltips on detail labels', () => {
+    const neoField = component['sections']
+      .flatMap((section) => section.fields)
+      .find((field) => field.key === 'neoScore');
+
+    expect(neoField?.description.toLowerCase()).toContain('near-earth');
+
+    fixture.componentRef.setInput('visible', true);
+    fixture.componentRef.setInput('candidate', candidate('OBJ01'));
+    fixture.detectChanges();
+
+    const root = fixture.nativeElement as HTMLElement;
+    const neoLabel = Array.from(root.querySelectorAll('dt')).find((el) =>
+      el.textContent?.includes('NEO score'),
+    );
+    expect(neoLabel).toBeTruthy();
+    expect(neoLabel?.classList.contains('cursor-help')).toBe(true);
+  });
+
   it('should emit visibleChange false on close', () => {
     const emitted: boolean[] = [];
     component.visibleChange.subscribe((value) => emitted.push(value));

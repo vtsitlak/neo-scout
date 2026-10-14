@@ -11,6 +11,11 @@ import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { Divider } from 'primeng/divider';
 import { Tag } from 'primeng/tag';
+import { Tooltip } from 'primeng/tooltip';
+import {
+  SCOUT_FIELD_META,
+  SCOUT_HAZARD_INTEREST_META,
+} from '../scout/scout-field-meta';
 import {
   formatScoutDetailValue,
   hazardInterest,
@@ -19,7 +24,7 @@ import {
 
 @Component({
   selector: 'neo-scout-candidate-dialog',
-  imports: [Button, Dialog, Divider, PrimeTemplate, Tag],
+  imports: [Button, Dialog, Divider, PrimeTemplate, Tag, Tooltip],
   templateUrl: './scout-candidate-dialog.html',
   styleUrl: './scout-candidate-dialog.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,16 +48,28 @@ export class ScoutCandidateDialog {
     }
     return [
       {
-        label: 'Hazard interest',
+        label: SCOUT_HAZARD_INTEREST_META.label,
         value: hazardInterest(current),
         severity: 'warn' as const,
+        description: SCOUT_HAZARD_INTEREST_META.description,
       },
-      { label: 'NEO', value: current.neoScore, severity: 'info' as const },
-      { label: 'PHA', value: current.phaScore, severity: 'info' as const },
       {
-        label: 'Rating',
+        label: 'NEO',
+        value: current.neoScore,
+        severity: 'info' as const,
+        description: SCOUT_FIELD_META.neoScore.description,
+      },
+      {
+        label: 'PHA',
+        value: current.phaScore,
+        severity: 'info' as const,
+        description: SCOUT_FIELD_META.phaScore.description,
+      },
+      {
+        label: SCOUT_FIELD_META.rating.label,
         value: current.rating,
         severity: 'secondary' as const,
+        description: SCOUT_FIELD_META.rating.description,
       },
     ];
   });
