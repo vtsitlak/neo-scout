@@ -23,7 +23,9 @@ test.describe('Contact page', () => {
   }) => {
     await page.getByLabel('Name', { exact: true }).fill('Ada Lovelace');
     await page.getByLabel('Work email').fill('ada@example.com');
-    await page.getByLabel('Company').fill('Analytical Engines');
+    await page
+      .getByRole('textbox', { name: 'Company' })
+      .fill('Analytical Engines');
     await page.getByLabel('Employee count').selectOption({ value: '11-50' });
     await page
       .getByLabel('Message', { exact: true })
