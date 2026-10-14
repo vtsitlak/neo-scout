@@ -55,7 +55,11 @@ test.describe('NEO Scout app shell', () => {
 
     await nav.getByRole('button', { name: 'Scout' }).click();
     await expect(page).toHaveURL(/\/scout$/);
-    await expect(page.locator('neo-scout')).toBeAttached();
+    await expect(page.locator('neo-scout')).toBeVisible();
+    await expect(page.locator('ag-grid-angular')).toBeVisible({
+      timeout: 60_000,
+    });
+    await expect(page.getByText(/^Showing \d+–\d+ of \d+$/)).toBeVisible();
 
     await nav.getByRole('button', { name: 'Contact' }).click();
     await expect(page).toHaveURL(/\/contact$/);

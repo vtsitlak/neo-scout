@@ -6,4 +6,3 @@ export type {
   ScoutSortField,
   ScoutState,
 } from './lib/scout.models';
-export { DEFAULT_SCOUT_PAGE_SIZE } from './lib/scout.models';

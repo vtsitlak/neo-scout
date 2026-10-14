@@ -5,9 +5,8 @@ import {
   ScoutCandidate,
 } from '@neo-scout/api';
 import { ErrorToastService } from '@neo-scout/shared/services';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ScoutFacade } from './scout.facade';
-import { DEFAULT_SCOUT_PAGE_SIZE } from './scout.models';
 
 function candidate(
   overrides: Partial<ScoutCandidate> & Pick<ScoutCandidate, 'objectName'>,
@@ -74,29 +73,26 @@ describe('ScoutFacade', () => {
     facade = TestBed.inject(ScoutFacade);
   });
 
-  function settle(): void {
-    TestBed.flushEffects();
-    TestBed.tick();
-    TestBed.flushEffects();
-  }
-
-  function flushLoad(response: ScoutApiResponse = sampleResponse): void {
+  async function flushLoad(
+    response: ScoutApiResponse = sampleResponse,
+  ): Promise<void> {
     getCandidates.mockReturnValueOnce(of(response));
     facade.loadAll();
-    settle();
+    await Promise.resolve();
   }
 
-  it('should load all candidates through the facade', () => {
-    flushLoad();
+  it('should load all candidates through the facade', async () => {
+    await flushLoad();
 
-    expect(facade.isLoadingAll()).toBe(false);
+    expect(facade.loading()).toBe(false);
     expect(facade.candidates().length).toBe(25);
-    expect(facade.visibleCandidates().length).toBe(DEFAULT_SCOUT_PAGE_SIZE);
-    expect(facade.hasMore()).toBe(true);
+    expect(facade.totalCandidates()).toBe(25);
+    expect(facade.filteredCandidates().length).toBe(25);
+    expect(facade.totalFilteredCandidates()).toBe(25);
   });
 
-  it('should reload candidates', () => {
-    flushLoad();
+  it('should reload candidates', async () => {
+    await flushLoad();
 
     getCandidates.mockReturnValueOnce(
       of({
@@ -106,28 +102,25 @@ describe('ScoutFacade', () => {
       }),
     );
     facade.reload();
-    settle();
+    await Promise.resolve();
 
     expect(facade.candidates().length).toBe(3);
-    expect(facade.hasMore()).toBe(false);
+    expect(facade.filteredCandidates().length).toBe(3);
   });
 
-  it('should get by id and expose selectedCandidate', () => {
-    flushLoad();
-
-    facade.getById('OBJ05');
-
-    expect(facade.isLoadingById()).toBe(false);
-    expect(facade.selectedCandidate()?.objectName).toBe('OBJ05');
-  });
-
-  it('should search, filter, sort, and load more', async () => {
-    flushLoad();
+  it('should search, filter, and sort client-side', async () => {
+    await flushLoad();
 
     facade.setSearch('OBJ1');
     expect(
       facade.filteredCandidates().every((c) => c.objectName.includes('OBJ1')),
     ).toBe(true);
+    expect(facade.totalFilteredCandidates()).toBe(
+      facade.filteredCandidates().length,
+    );
+    expect(facade.totalFilteredCandidates()).toBeLessThan(
+      facade.totalCandidates(),
+    );
 
     facade.setSearch('');
     facade.setFilter({ minNeoScore: 80, hasCloseApproach: true });
@@ -145,19 +138,16 @@ describe('ScoutFacade', () => {
     expect(first).toBeTruthy();
     expect(second).toBeTruthy();
     expect(first?.neoScore ?? 0).toBeGreaterThanOrEqual(second?.neoScore ?? 0);
+  });
 
-    facade.setSearch('');
-    facade.setFilter({});
-    facade.resetVisible();
-    expect(facade.visibleCandidates().length).toBe(DEFAULT_SCOUT_PAGE_SIZE);
-    expect(facade.hasMore()).toBe(true);
-    expect(facade.isLoadingMore()).toBe(false);
-    facade.loadMore();
-    expect(facade.isLoadingMore()).toBe(true);
-    expect(facade.visibleCandidates().length).toBe(facade.totalFiltered());
+  it('should toast when the API fails', async () => {
+    getCandidates.mockReturnValueOnce(throwError(() => new Error('boom')));
+    facade.loadAll();
     await Promise.resolve();
-    expect(facade.isLoadingMore()).toBe(false);
-    expect(facade.hasMore()).toBe(false);
+
+    expect(facade.loading()).toBe(false);
+    expect(facade.candidates()).toEqual([]);
+    expect(showError).toHaveBeenCalledWith('boom');
   });
 
   it('should show an error toast via handleError', () => {

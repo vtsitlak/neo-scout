@@ -1,0 +1,10 @@
+{
+  "/api/scout": {
+    "target": "https://ssd-api.jpl.nasa.gov",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/scout": "/scout.api"
+    }
+  }
+}
