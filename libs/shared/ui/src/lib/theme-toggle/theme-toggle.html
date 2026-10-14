@@ -1,9 +1,9 @@
-<p-toggleButton
-  [ngModel]="isDark()"
-  (ngModelChange)="onDarkChange($event)"
-  onIcon="pi pi-sun"
-  offIcon="pi pi-moon"
-  onLabel=""
-  offLabel=""
+<p-button
+  type="button"
+  [icon]="isDark() ? 'pi pi-sun' : 'pi pi-moon'"
+  [rounded]="true"
+  [text]="true"
+  severity="secondary"
   ariaLabel="Toggle color theme"
+  (onClick)="toggle()"
 />
