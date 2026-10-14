@@ -1,0 +1,55 @@
+<section class="flex w-full flex-col gap-4" aria-label="Scout candidates">
+  @if (showInitialSkeleton()) {
+  <div
+    class="flex min-h-80 flex-col items-center justify-center gap-3"
+    role="status"
+    aria-live="polite"
+    aria-label="Loading Scout candidates"
+  >
+    <p-skeleton width="16rem" height="1.25rem" />
+    <p-skeleton width="22rem" height="1.25rem" />
+    <p-skeleton width="18rem" height="1.25rem" />
+    <p-skeleton width="20rem" height="12rem" borderRadius="0.5rem" />
+  </div>
+  } @else if (showEmptyState()) {
+  <div
+    class="flex min-h-80 flex-col items-center justify-center gap-4 px-6 text-center"
+    role="status"
+    aria-live="polite"
+    aria-label="No Scout candidates available"
+  >
+    <p class="max-w-md text-base text-[var(--ns-fg-muted)]">
+      No near-Earth objects were found right now. Check back shortly, or refresh
+      to try again.
+    </p>
+    <p-button
+      label="Refresh"
+      icon="pi pi-refresh"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="refresh()"
+    />
+  </div>
+  } @else {
+  <div class="scout-grid-shell flex w-full flex-col">
+    <ag-grid-angular
+      class="scout-grid w-full"
+      [theme]="gridTheme()"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [rowData]="rowData()"
+      [getRowId]="getRowId"
+      [animateRows]="true"
+    />
+
+    <div
+      class="scout-grid-footer flex items-center justify-between gap-3 border-t border-[var(--ns-border)] bg-[var(--ns-bg-elevated)] px-3 py-2 text-sm text-[var(--ns-fg-muted)]"
+      role="status"
+      aria-live="polite"
+      [attr.aria-label]="rowSummary()"
+    >
+      <span>{{ rowSummary() }}</span>
+    </div>
+  </div>
+  }
+</section>

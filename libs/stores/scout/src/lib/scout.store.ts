@@ -1,17 +1,15 @@
-import { computed, effect, inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { ScoutCandidate } from '@neo-scout/api';
 import { ErrorToastService } from '@neo-scout/shared/services';
 import {
   patchState,
   signalStore,
   withComputed,
-  withHooks,
   withMethods,
   withState,
 } from '@ngrx/signals';
 import { ScoutDataService } from './scout-data.service';
 import {
-  DEFAULT_SCOUT_PAGE_SIZE,
   ScoutFilter,
   ScoutSort,
   ScoutSortDirection,
@@ -21,17 +19,11 @@ import {
 
 const initialState: ScoutState = {
   candidates: [],
-  selectedId: null,
   searchQuery: '',
   filter: {},
   sort: { field: 'objectName', direction: 'asc' },
-  pageSize: DEFAULT_SCOUT_PAGE_SIZE,
-  visibleCount: DEFAULT_SCOUT_PAGE_SIZE,
-  isLoadingAll: false,
-  isLoadingById: false,
-  isLoadingMore: false,
+  loading: false,
   error: null,
-  pendingSelectedId: null,
 };
 
 function applyFilter(
@@ -117,36 +109,21 @@ export const ScoutStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withComputed((store) => {
+    /** Candidates after search, filter, and sort (full list — API returns all rows). */
     const filteredCandidates = computed(() => {
       const searched = applySearch(store.candidates(), store.searchQuery());
       const filtered = applyFilter(searched, store.filter());
       return applySort(filtered, store.sort());
     });
 
-    const visibleCandidates = computed(() =>
-      filteredCandidates().slice(0, store.visibleCount()),
-    );
-
-    const hasMore = computed(
-      () => filteredCandidates().length > store.visibleCount(),
-    );
-
-    const selectedCandidate = computed(() => {
-      const id = store.selectedId();
-      if (!id) {
-        return null;
-      }
-      return store.candidates().find((c) => c.objectName === id) ?? null;
-    });
-
-    const totalFiltered = computed(() => filteredCandidates().length);
-
     return {
       filteredCandidates,
-      visibleCandidates,
-      hasMore,
-      selectedCandidate,
-      totalFiltered,
+
+      /** Total loaded candidates (before search/filter). */
+      totalCandidates: computed(() => store.candidates().length),
+
+      /** Count after search, filter, and sort. */
+      totalFilteredCandidates: computed(() => filteredCandidates().length),
     };
   }),
   withMethods(
@@ -154,167 +131,55 @@ export const ScoutStore = signalStore(
       store,
       dataService = inject(ScoutDataService),
       errorToast = inject(ErrorToastService),
-    ) => ({
-      loadAll(): void {
-        patchState(store, {
-          isLoadingAll: true,
-          isLoadingMore: false,
-          error: null,
-        });
-        dataService.load();
-      },
-
-      /** Force refresh from the Scout API (same source as loadAll). */
-      reload(): void {
-        patchState(store, {
-          isLoadingAll: true,
-          isLoadingMore: false,
-          error: null,
-        });
-        dataService.reload();
-      },
-
-      getById(objectName: string): void {
-        patchState(store, {
-          isLoadingById: true,
-          selectedId: objectName,
-          error: null,
-        });
-
-        const existing = store
-          .candidates()
-          .find((candidate) => candidate.objectName === objectName);
-
-        if (existing) {
-          patchState(store, { isLoadingById: false, pendingSelectedId: null });
-          return;
+    ) => {
+      async function fetchCandidates(): Promise<void> {
+        patchState(store, { loading: true, error: null });
+        try {
+          const candidates = await dataService.load();
+          patchState(store, { candidates, loading: false, error: null });
+        } catch (error) {
+          patchState(store, { candidates: [], loading: false, error });
+          errorToast.show(toErrorMessage(error));
         }
+      }
 
-        if (store.candidates().length === 0) {
-          patchState(store, { pendingSelectedId: objectName });
-          dataService.load();
-          return;
-        }
+      return {
+        loadAll(): void {
+          void fetchCandidates();
+        },
 
-        patchState(store, {
-          isLoadingById: false,
-          selectedId: null,
-          pendingSelectedId: null,
-        });
-      },
+        /** Force refresh from the Scout API. */
+        reload(): void {
+          void fetchCandidates();
+        },
 
-      setSearch(query: string): void {
-        patchState(store, {
-          searchQuery: query,
-          visibleCount: store.pageSize(),
-          isLoadingMore: false,
-        });
-      },
+        setSearch(query: string): void {
+          patchState(store, { searchQuery: query });
+        },
 
-      setFilter(filter: ScoutFilter): void {
-        patchState(store, {
-          filter,
-          visibleCount: store.pageSize(),
-          isLoadingMore: false,
-        });
-      },
+        setFilter(filter: ScoutFilter): void {
+          patchState(store, { filter });
+        },
 
-      patchFilter(partial: Partial<ScoutFilter>): void {
-        patchState(store, {
-          filter: { ...store.filter(), ...partial },
-          visibleCount: store.pageSize(),
-          isLoadingMore: false,
-        });
-      },
-
-      setSort(
-        field: ScoutSortField,
-        direction: ScoutSortDirection = 'asc',
-      ): void {
-        patchState(store, {
-          sort: { field, direction },
-          visibleCount: store.pageSize(),
-          isLoadingMore: false,
-        });
-      },
-
-      loadMore(): void {
-        if (!store.hasMore() || store.isLoadingMore()) {
-          return;
-        }
-        patchState(store, { isLoadingMore: true });
-        patchState(store, {
-          visibleCount: store.visibleCount() + store.pageSize(),
-        });
-        queueMicrotask(() => {
-          patchState(store, { isLoadingMore: false });
-        });
-      },
-
-      resetVisible(): void {
-        patchState(store, {
-          visibleCount: store.pageSize(),
-          isLoadingMore: false,
-        });
-      },
-
-      clearSelection(): void {
-        patchState(store, {
-          selectedId: null,
-          pendingSelectedId: null,
-          isLoadingById: false,
-        });
-      },
-
-      handleError(error: unknown): void {
-        errorToast.show(toErrorMessage(error));
-      },
-    }),
-  ),
-  withHooks({
-    onInit(store, dataService = inject(ScoutDataService)) {
-      effect(() => {
-        const status = dataService.status();
-        const loading = dataService.isLoading();
-
-        patchState(store, { isLoadingAll: loading });
-
-        if (status === 'error') {
-          const error = dataService.error();
+        patchFilter(partial: Partial<ScoutFilter>): void {
           patchState(store, {
-            error,
-            isLoadingById: false,
-            pendingSelectedId: null,
+            filter: { ...store.filter(), ...partial },
           });
-          store.handleError(error);
-          return;
-        }
+        },
 
-        if (
-          status === 'resolved' ||
-          status === 'local' ||
-          status === 'reloading'
-        ) {
-          const candidates = dataService.data();
-          const pendingId = store.pendingSelectedId();
-          patchState(store, {
-            candidates,
-            error: null,
-            isLoadingAll: loading,
-          });
+        setSort(
+          field: ScoutSortField,
+          direction: ScoutSortDirection = 'asc',
+        ): void {
+          patchState(store, { sort: { field, direction } });
+        },
 
-          if (pendingId && status !== 'reloading') {
-            const found = candidates.some((c) => c.objectName === pendingId);
-            patchState(store, {
-              selectedId: found ? pendingId : null,
-              pendingSelectedId: null,
-              isLoadingById: false,
-            });
-          }
-        }
-      });
+        handleError(error: unknown): void {
+          errorToast.show(toErrorMessage(error));
+        },
+      };
     },
-  }),
+  ),
 );
 
 export type ScoutStore = InstanceType<typeof ScoutStore>;

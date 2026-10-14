@@ -57,55 +57,16 @@ describe('ScoutDataService', () => {
     service = TestBed.inject(ScoutDataService);
   });
 
-  function settle(): void {
-    TestBed.flushEffects();
-    TestBed.tick();
-    TestBed.flushEffects();
-  }
-
-  it('should stay idle until load is called', () => {
-    expect(service.status()).toBe('idle');
-    expect(getCandidates).not.toHaveBeenCalled();
-  });
-
-  it('should load candidates via rxResource and expose data signal', () => {
-    service.load();
-    settle();
+  it('should load candidates from the API', async () => {
+    const candidates = await service.load();
 
     expect(getCandidates).toHaveBeenCalledTimes(1);
-    expect(service.status()).toBe('resolved');
-    expect(service.data().length).toBe(1);
-    expect(service.data()[0]?.objectName).toBe('6K72D21');
-    expect(service.error()).toBeUndefined();
+    expect(candidates).toEqual([sampleCandidate]);
   });
 
-  it('should reload and fetch again', () => {
-    service.load();
-    settle();
-
-    getCandidates.mockReturnValueOnce(
-      of({
-        ...sampleResponse,
-        data: [sampleCandidate, { ...sampleCandidate, objectName: 'RELOAD1' }],
-        count: '2',
-      }),
-    );
-
-    service.reload();
-    settle();
-
-    expect(getCandidates).toHaveBeenCalledTimes(2);
-    expect(service.data().length).toBe(2);
-  });
-
-  it('should surface errors on the error signal', () => {
+  it('should reject when the API fails', async () => {
     getCandidates.mockReturnValueOnce(throwError(() => new Error('boom')));
 
-    service.load();
-    settle();
-
-    expect(service.status()).toBe('error');
-    expect(service.error()).toBeTruthy();
-    expect(service.data()).toEqual([]);
+    await expect(service.load()).rejects.toThrow('boom');
   });
 });

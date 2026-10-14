@@ -23,22 +23,11 @@ export interface ScoutFilter {
   hasCloseApproach?: boolean;
 }
 
-export const DEFAULT_SCOUT_PAGE_SIZE = 20;
-
 export interface ScoutState {
   candidates: ScoutCandidate[];
-  selectedId: string | null;
   searchQuery: string;
   filter: ScoutFilter;
   sort: ScoutSort;
-  pageSize: number;
-  /** How many filtered rows are currently visible (load-more window). */
-  visibleCount: number;
-  isLoadingAll: boolean;
-  isLoadingById: boolean;
-  /** True while a load-more window expansion is in progress. */
-  isLoadingMore: boolean;
+  loading: boolean;
   error: unknown | null;
-  /** Pending get-by-id after a list load finishes. */
-  pendingSelectedId: string | null;
 }
