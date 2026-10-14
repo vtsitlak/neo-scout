@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
-import { DEFAULT_SCOUT_API_URL, SCOUT_API_URL } from '@neo-scout/api';
+import { SCOUT_API_URL } from '@neo-scout/api';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
@@ -16,6 +16,20 @@ import { NeoScoutPreset } from './theme/neo-scout.preset';
 
 /** AG Grid Community only — do not register Enterprise modules. */
 ModuleRegistry.registerModules([AllCommunityModule]);
+
+/**
+ * Dev: proxy `/api/scout` → JPL (avoids CORS).
+ * Production / GitHub Pages: same-origin snapshot `scout.api.json`
+ * (fetched at Pages build time — browsers cannot call JPL Scout directly).
+ */
+function scoutApiUrl(): string {
+  if (isDevMode()) {
+    return '/api/scout';
+  }
+  const baseHref = document.querySelector('base')?.getAttribute('href') ?? '/';
+  const normalized = baseHref.endsWith('/') ? baseHref : `${baseHref}/`;
+  return `${normalized}scout.api.json`;
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,8 +41,7 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     {
       provide: SCOUT_API_URL,
-      // Dev serve proxies /api/scout → JPL (no CORS). Production still hits JPL directly.
-      useFactory: () => (isDevMode() ? '/api/scout' : DEFAULT_SCOUT_API_URL),
+      useFactory: scoutApiUrl,
     },
     providePrimeNG({
       theme: {
