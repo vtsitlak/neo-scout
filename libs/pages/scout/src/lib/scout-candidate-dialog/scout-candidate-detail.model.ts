@@ -54,12 +54,7 @@ export const SCOUT_DETAIL_SECTIONS: ScoutDetailSection[] = [
   },
   {
     title: 'Sky position',
-    fields: [
-      field('ra'),
-      field('dec'),
-      field('elong'),
-      field('rate'),
-    ],
+    fields: [field('ra'), field('dec'), field('elong'), field('rate')],
   },
   {
     title: 'Timing',

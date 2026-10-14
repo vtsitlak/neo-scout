@@ -1,10 +1,7 @@
 import { ScoutCandidate } from '@neo-scout/api';
 import type { ColDef, ValueGetterParams } from 'ag-grid-community';
 import { ScoutColumnInnerHeader } from './scout-column-inner-header';
-import {
-  SCOUT_FIELD_META,
-  SCOUT_ROW_NUMBER_META,
-} from './scout-field-meta';
+import { SCOUT_FIELD_META, SCOUT_ROW_NUMBER_META } from './scout-field-meta';
 
 const withPrimeHeaderTooltip = (
   headerName: string,

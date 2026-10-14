@@ -167,9 +167,7 @@ test.describe('Scout page', () => {
     await expect(dialog).toBeVisible();
     await expect(dialog.getByText('ALPHA01').first()).toBeVisible();
     await expect(dialog.getByText(/Hazard interest:\s*50/)).toBeVisible();
-    await expect(
-      dialog.getByRole('region', { name: 'Scores' }),
-    ).toBeVisible();
+    await expect(dialog.getByRole('region', { name: 'Scores' })).toBeVisible();
     await expect(dialog.getByText('NEO score')).toBeVisible();
     await expect(dialog.getByText('90').first()).toBeVisible();
 

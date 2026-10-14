@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import type { IHeaderParams } from 'ag-grid-community';
 import type { IInnerHeaderAngularComp } from 'ag-grid-angular';
 import { Tooltip } from 'primeng/tooltip';

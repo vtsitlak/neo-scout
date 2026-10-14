@@ -60,7 +60,8 @@ export const SCOUT_FIELD_META: Record<keyof ScoutCandidate, ScoutFieldMeta> = {
   },
   Vmag: {
     label: 'Apparent mag.',
-    description: 'Apparent visual magnitude (brighter objects have lower values).',
+    description:
+      'Apparent visual magnitude (brighter objects have lower values).',
   },
   nObs: {
     label: 'Observations',
