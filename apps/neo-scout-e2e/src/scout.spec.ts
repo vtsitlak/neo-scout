@@ -86,8 +86,8 @@ const SCOUT_FIXTURE = {
 };
 
 async function mockScoutApi(page: Page): Promise<void> {
-  // Dev serve proxies NASA Scout via `/api/scout`; production uses scout.api.
-  await page.route(/\/(api\/scout|scout\.api)(\?|$)/, async (route) => {
+  // Dev: `/api/scout` proxy. Pages: same-origin `scout.api.json` snapshot.
+  await page.route(/\/(api\/scout|scout\.api\.json)(\?|$)/, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',

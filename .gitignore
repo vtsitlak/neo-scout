@@ -107,5 +107,8 @@ apps/*/public/favicon-32.png
 apps/*/public/apple-touch-icon.png
 **/brand/*.png
 
+# Scout snapshot for Pages (fetched in CI / npm run fetch:scout-snapshot)
+apps/neo-scout/public/scout.api.json
+
 .angular
 .vitest

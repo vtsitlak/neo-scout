@@ -1,11 +1,12 @@
 {
   "name": "@neo-scout/source",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "scripts": {
     "start": "nx serve neo-scout",
     "build": "nx build neo-scout",
     "build:pages": "nx build neo-scout --configuration=production --base-href=/neo-scout/",
+    "fetch:scout-snapshot": "curl -fsSL https://ssd-api.jpl.nasa.gov/scout.api -o apps/neo-scout/public/scout.api.json",
     "test": "nx run-many -t test --all",
     "test:app": "nx test neo-scout",
     "test:libs": "nx run-many -t test -p pages-home,pages-scout,pages-contact,shared-ui,stores-theme",
