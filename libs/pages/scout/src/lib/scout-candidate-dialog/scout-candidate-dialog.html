@@ -1,0 +1,60 @@
+<p-dialog
+  [header]="dialogHeader()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="true"
+  [style]="{ width: 'min(40rem, 95vw)' }"
+  [contentStyle]="{ 'max-height': 'min(70vh, 36rem)', overflow: 'auto' }"
+  [visible]="visible()"
+  (visibleChange)="onVisibleChange($event)"
+>
+  @if (candidate(); as selected) {
+  <div class="flex flex-col gap-4 py-1" aria-label="Candidate details">
+    <div class="flex flex-wrap items-center gap-2">
+      @for (tag of scoreTags(); track tag.label) {
+      <p-tag
+        [value]="tag.label + ': ' + formatValue(tag.value)"
+        [severity]="tag.severity"
+      />
+      }
+    </div>
+
+    @for (section of sections; track section.title; let first = $first) { @if
+    (!first) {
+    <p-divider />
+    }
+    <section class="flex flex-col gap-3" [attr.aria-label]="section.title">
+      <h3
+        class="m-0 text-sm font-semibold tracking-wide text-[var(--ns-fg-muted)] uppercase"
+      >
+        {{ section.title }}
+      </h3>
+      <dl class="m-0 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        @for (field of section.fields; track field.key) {
+        <div
+          class="flex flex-col gap-1 rounded-md border border-[var(--ns-border)] bg-[var(--ns-bg-elevated)] px-3 py-2"
+        >
+          <dt class="text-xs text-[var(--ns-fg-muted)]">{{ field.label }}</dt>
+          <dd class="m-0 text-sm font-medium text-[var(--ns-fg)] break-all">
+            {{ fieldValue(selected, field.key) }}
+          </dd>
+        </div>
+        }
+      </dl>
+    </section>
+    }
+  </div>
+  }
+
+  <ng-template pTemplate="footer">
+    <div class="flex w-full flex-wrap items-center justify-end gap-2">
+      <p-button
+        label="Close"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="close()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>
