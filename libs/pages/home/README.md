@@ -1,7 +1,7 @@
 # pages-home
 
-This library was generated with [Nx](https://nx.dev).
+Landing page: short product intro and CTAs to Scout and Contact. Lazy-loaded at `/`.
 
-## Running unit tests
-
-Run `nx test pages-home` to execute the unit tests.
+```sh
+npx nx test pages-home
+```

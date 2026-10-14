@@ -1,7 +1,7 @@
 # shared-services
 
-This library was generated with [Nx](https://nx.dev).
+Cross-cutting services such as `ErrorToastService` (PrimeNG toast wrapper) used by Scout and Contact stores.
 
-## Running unit tests
-
-Run `nx test shared-services` to execute the unit tests.
+```sh
+npx nx test shared-services
+```

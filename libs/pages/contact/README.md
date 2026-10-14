@@ -1,7 +1,7 @@
 # pages-contact
 
-This library was generated with [Nx](https://nx.dev).
+Contact page: company details plus an inquiry form (Angular Signal Forms). Submit is handled via `stores-contact` (simulated).
 
-## Running unit tests
-
-Run `nx test pages-contact` to execute the unit tests.
+```sh
+npx nx test pages-contact
+```

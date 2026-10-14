@@ -1,7 +1,7 @@
 # api
 
-This library was generated with [Nx](https://nx.dev).
+Thin HTTP client and models for the NASA/JPL Scout candidate list (`ScoutApiService`, `ScoutCandidate`). No UI or store logic — filtering/search belong in `stores-scout`.
 
-## Running unit tests
-
-Run `nx test api` to execute the unit tests.
+```sh
+npx nx test api
+```

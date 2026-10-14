@@ -1,7 +1,7 @@
 # pages-scout
 
-This library was generated with [Nx](https://nx.dev).
+Scout board: AG Grid of candidates, search/filter toolbar, and candidate detail dialog (PrimeNG). Uses `stores-scout` for data.
 
-## Running unit tests
-
-Run `nx test pages-scout` to execute the unit tests.
+```sh
+npx nx test pages-scout
+```
