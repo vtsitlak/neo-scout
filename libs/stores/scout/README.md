@@ -1,7 +1,7 @@
 # stores-scout
 
-This library was generated with [Nx](https://nx.dev).
+Scout SignalStore + facade: load candidates from `api`, client-side search/filter/sort, loading/error state (errors toast via `shared-services`).
 
-## Running unit tests
-
-Run `nx test stores-scout` to execute the unit tests.
+```sh
+npx nx test stores-scout
+```

@@ -14,35 +14,31 @@ describe('ThemeToggle', () => {
     fixture = TestBed.createComponent(ThemeToggle);
     themeStore = TestBed.inject(ThemeStore);
     themeStore.setMode('light');
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 
   it('should create', () => {
-    // Arrange / Act / Assert
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render an accessible icon-only toggle button', () => {
-    // Arrange / Act
-    const toggle = (fixture.nativeElement as HTMLElement).querySelector(
-      'p-togglebutton, p-toggleButton',
-    );
+  it('should render an accessible icon-only theme button', () => {
+    const root = fixture.nativeElement as HTMLElement;
+    const button = root.querySelector(
+      '[aria-label="Toggle color theme"]',
+    ) as HTMLElement | null;
 
-    // Assert
-    expect(toggle).toBeTruthy();
-    expect(
-      (fixture.nativeElement as HTMLElement).querySelector(
-        '[aria-label="Toggle color theme"]',
-      ),
-    ).toBeTruthy();
+    expect(button).toBeTruthy();
+    expect(root.querySelector('.pi-moon, .pi-sun')).toBeTruthy();
   });
 
-  it('should switch ThemeStore to dark when toggled on', async () => {
-    // Arrange / Act
-    themeStore.setMode('dark');
-    await fixture.whenStable();
+  it('should toggle ThemeStore between light and dark', () => {
+    const component = fixture.componentInstance;
 
-    // Assert
+    component['toggle']();
     expect(themeStore.mode()).toBe('dark');
+
+    component['toggle']();
+    expect(themeStore.mode()).toBe('light');
   });
 });

@@ -11,15 +11,18 @@
     <div class="flex items-center">
       <nav class="flex flex-wrap items-center gap-1" aria-label="Primary">
         @for (item of items(); track item.link) {
-        <p-button
-          [label]="item.text"
+        <a
+          pButton
+          #rla="routerLinkActive"
           [routerLink]="item.link"
-          routerLinkActive="p-button-outlined"
+          routerLinkActive
           [routerLinkActiveOptions]="{ exact: item.link === '/' }"
-          [text]="true"
-          severity="secondary"
+          ariaCurrentWhenActive="page"
+          [text]="!rla.isActive"
+          [severity]="rla.isActive ? 'primary' : 'secondary'"
           class="font-display! text-sm!"
-        />
+          >{{ item.text }}</a
+        >
         }
       </nav>
 

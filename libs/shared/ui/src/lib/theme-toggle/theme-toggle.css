@@ -1,0 +1,21 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host :deep(.p-button) {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+:host :deep(.p-button-icon) {
+  margin: 0;
+  line-height: 1;
+}

@@ -1,7 +1,7 @@
 # stores-theme
 
-This library was generated with [Nx](https://nx.dev).
+Light/dark theme SignalStore used by the app shell toggle and Scout grid theming.
 
-## Running unit tests
-
-Run `nx test stores-theme` to execute the unit tests.
+```sh
+npx nx test stores-theme
+```

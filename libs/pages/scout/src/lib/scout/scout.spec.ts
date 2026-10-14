@@ -105,6 +105,13 @@ describe('Scout', () => {
     expect(root.querySelector('neo-scout-toolbar')).toBeTruthy();
   });
 
+  it('should describe what the Scout table shows', () => {
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.textContent).toContain('Scout board');
+    expect(root.textContent).toContain('NASA/JPL Scout candidates');
+    expect(root.textContent).toContain('near-Earth object');
+  });
+
   it('should apply search query through the facade', () => {
     component['onSearchQueryChange']('OBJ1');
     expect(setSearch).toHaveBeenCalledWith('OBJ1');

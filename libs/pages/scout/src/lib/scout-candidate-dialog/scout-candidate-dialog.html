@@ -14,8 +14,13 @@
     <div class="flex flex-wrap items-center gap-2">
       @for (tag of scoreTags(); track tag.label) {
       <p-tag
+        class="cursor-help"
         [value]="tag.label + ': ' + formatValue(tag.value)"
         [severity]="tag.severity"
+        [pTooltip]="tag.description"
+        tooltipPosition="top"
+        [appendTo]="'body'"
+        [showDelay]="200"
       />
       }
     </div>
@@ -35,7 +40,15 @@
         <div
           class="flex flex-col gap-1 rounded-md border border-[var(--ns-border)] bg-[var(--ns-bg-elevated)] px-3 py-2"
         >
-          <dt class="text-xs text-[var(--ns-fg-muted)]">{{ field.label }}</dt>
+          <dt
+            class="cursor-help text-xs text-[var(--ns-fg-muted)]"
+            [pTooltip]="field.description"
+            tooltipPosition="top"
+            [appendTo]="'body'"
+            [showDelay]="200"
+          >
+            {{ field.label }}
+          </dt>
           <dd class="m-0 text-sm font-medium text-[var(--ns-fg)] break-all">
             {{ fieldValue(selected, field.key) }}
           </dd>

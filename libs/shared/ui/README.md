@@ -1,7 +1,7 @@
 # shared-ui
 
-This library was generated with [Nx](https://nx.dev).
+Reusable shell UI: header navigation, info footer (`AppInfo`), theme toggle, and related presentational pieces. No feature/store dependencies.
 
-## Running unit tests
-
-Run `nx test shared-ui` to execute the unit tests.
+```sh
+npx nx test shared-ui
+```
