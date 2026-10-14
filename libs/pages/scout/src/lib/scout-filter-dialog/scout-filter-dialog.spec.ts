@@ -16,6 +16,29 @@ describe('ScoutFilterDialog', () => {
     fixture.detectChanges();
   });
 
+  it('should expose 0–100 score bounds via Signal Forms min/max', () => {
+    fixture.componentRef.setInput('visible', true);
+    fixture.detectChanges();
+
+    expect(component['draftForm'].minNeoScore().min?.()).toBe(0);
+    expect(component['draftForm'].minNeoScore().max?.()).toBe(100);
+    expect(component['draftForm'].minPhaScore().min?.()).toBe(0);
+    expect(component['draftForm'].minPhaScore().max?.()).toBe(100);
+
+    const root = fixture.nativeElement as HTMLElement;
+    const neo = root.querySelector(
+      'input[aria-label="Minimum NEO score"]',
+    ) as HTMLInputElement | null;
+    const pha = root.querySelector(
+      'input[aria-label="Minimum PHA score"]',
+    ) as HTMLInputElement | null;
+
+    expect(neo?.getAttribute('min')).toBe('0');
+    expect(neo?.getAttribute('max')).toBe('100');
+    expect(pha?.getAttribute('min')).toBe('0');
+    expect(pha?.getAttribute('max')).toBe('100');
+  });
+
   it('should emit applied filter and close on apply', () => {
     fixture.componentRef.setInput('visible', true);
     fixture.componentRef.setInput('filter', { minNeoScore: 40 });
