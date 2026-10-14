@@ -5,7 +5,7 @@ import {
   ScoutCandidate,
 } from '@neo-scout/api';
 import { ErrorToastService } from '@neo-scout/shared/services';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { ScoutFacade } from './scout.facade';
 
 function candidate(
@@ -91,19 +91,33 @@ describe('ScoutFacade', () => {
     expect(facade.totalFilteredCandidates()).toBe(25);
   });
 
-  it('should reload candidates', async () => {
+  it('should reset state, set loading, then reload candidates', async () => {
     await flushLoad();
+    facade.setSearch('OBJ1');
+    facade.setFilter({ minNeoScore: 40 });
+    facade.setSort('neoScore', 'desc');
 
-    getCandidates.mockReturnValueOnce(
-      of({
-        ...sampleResponse,
-        data: many.slice(0, 3),
-        count: '3',
-      }),
-    );
+    const pending$ = new Subject<ScoutApiResponse>();
+    getCandidates.mockReturnValueOnce(pending$.asObservable());
+
     facade.reload();
+
+    expect(facade.loading()).toBe(true);
+    expect(facade.candidates()).toEqual([]);
+    expect(facade.searchQuery()).toBe('');
+    expect(facade.filter()).toEqual({});
+    expect(facade.sort()).toEqual({ field: 'objectName', direction: 'asc' });
+    expect(facade.error()).toBeNull();
+
+    pending$.next({
+      ...sampleResponse,
+      data: many.slice(0, 3),
+      count: '3',
+    });
+    pending$.complete();
     await Promise.resolve();
 
+    expect(facade.loading()).toBe(false);
     expect(facade.candidates().length).toBe(3);
     expect(facade.filteredCandidates().length).toBe(3);
   });

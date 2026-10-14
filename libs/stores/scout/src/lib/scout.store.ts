@@ -148,8 +148,16 @@ export const ScoutStore = signalStore(
           void fetchCandidates();
         },
 
-        /** Force refresh from the Scout API. */
+        /** Clear Scout state, show loading, then fetch again. */
         reload(): void {
+          patchState(store, {
+            candidates: [],
+            searchQuery: '',
+            filter: {},
+            sort: { field: 'objectName', direction: 'asc' },
+            loading: true,
+            error: null,
+          });
           void fetchCandidates();
         },
 

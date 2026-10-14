@@ -1,7 +1,7 @@
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ScoutCandidate } from '@neo-scout/api';
-import { ScoutFacade } from '@neo-scout/stores/scout';
+import { ScoutFacade, ScoutFilter } from '@neo-scout/stores/scout';
 import { ThemeStore } from '@neo-scout/stores/theme';
 import { Scout } from './scout';
 
@@ -39,8 +39,12 @@ describe('Scout', () => {
   let component: Scout;
   let loadAll: ReturnType<typeof vi.fn>;
   let reload: ReturnType<typeof vi.fn>;
+  let setSearch: ReturnType<typeof vi.fn>;
+  let setFilter: ReturnType<typeof vi.fn>;
   let loading: ReturnType<typeof signal<boolean>>;
   let error: ReturnType<typeof signal<unknown | null>>;
+  let searchQuery: ReturnType<typeof signal<string>>;
+  let filter: ReturnType<typeof signal<ScoutFilter>>;
   let filteredCandidates: ReturnType<typeof signal<ScoutCandidate[]>>;
   let totalCandidates: ReturnType<typeof signal<number>>;
   let totalFilteredCandidates: ReturnType<typeof signal<number>>;
@@ -48,8 +52,12 @@ describe('Scout', () => {
   beforeEach(async () => {
     loadAll = vi.fn();
     reload = vi.fn();
+    setSearch = vi.fn();
+    setFilter = vi.fn();
     loading = signal(true);
     error = signal<unknown | null>(null);
+    searchQuery = signal('');
+    filter = signal<ScoutFilter>({});
     filteredCandidates = signal<ScoutCandidate[]>([]);
     totalCandidates = signal(0);
     totalFilteredCandidates = signal(0);
@@ -62,8 +70,12 @@ describe('Scout', () => {
           useValue: {
             loadAll,
             reload,
+            setSearch,
+            setFilter,
             loading,
             error,
+            searchQuery,
+            filter,
             filteredCandidates,
             totalCandidates,
             totalFilteredCandidates,
@@ -86,6 +98,40 @@ describe('Scout', () => {
 
   it('should load all candidates on create', () => {
     expect(loadAll).toHaveBeenCalledTimes(1);
+  });
+
+  it('should render the scout toolbar above the content', () => {
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('neo-scout-toolbar')).toBeTruthy();
+  });
+
+  it('should apply search query through the facade', () => {
+    component['onSearchQueryChange']('OBJ1');
+    expect(setSearch).toHaveBeenCalledWith('OBJ1');
+  });
+
+  it('should open the filter dialog from the toolbar', () => {
+    expect(component.filterDialogOpen()).toBe(false);
+    component['onOpenFilters']();
+    expect(component.filterDialogOpen()).toBe(true);
+  });
+
+  it('should apply filters from the dialog through the facade', () => {
+    component['onFilterChange']({ minNeoScore: 70, hasCloseApproach: true });
+    expect(setFilter).toHaveBeenCalledWith({
+      minNeoScore: 70,
+      hasCloseApproach: true,
+    });
+  });
+
+  it('should count active filter criteria for the toolbar badge', () => {
+    expect(component.activeFilterCount()).toBe(0);
+
+    filter.set({ minNeoScore: 40, minPhaScore: 10, hasCloseApproach: true });
+    expect(component.activeFilterCount()).toBe(3);
+
+    filter.set({ hasCloseApproach: true });
+    expect(component.activeFilterCount()).toBe(1);
   });
 
   it('should show a centered skeleton while the initial load is empty', () => {
@@ -170,9 +216,11 @@ describe('Scout', () => {
     await fixture.whenStable();
 
     const root = fixture.nativeElement as HTMLElement;
-    const footer = root.querySelector('[aria-label="Showing 1–3 of 10"]');
+    const footer = root.querySelector(
+      '[aria-label="Showing 3 of 10 candidates"]',
+    );
     expect(footer).toBeTruthy();
-    expect(footer?.textContent).toContain('Showing 1–3 of 10');
+    expect(footer?.textContent).toContain('Showing 3 of 10 candidates');
   });
 
   it('should include a non-sortable row number column', () => {

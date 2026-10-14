@@ -36,7 +36,7 @@ export class ScoutFacade {
     this.#store.loadAll();
   }
 
-  /** Force a fresh fetch from the Scout API. */
+  /** Reset Scout state, set loading, and fetch again. */
   reload(): void {
     this.#store.reload();
   }

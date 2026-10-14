@@ -1,4 +1,19 @@
 <section class="flex w-full flex-col gap-4" aria-label="Scout candidates">
+  <neo-scout-toolbar
+    [searchQuery]="searchQuery()"
+    [activeFilterCount]="activeFilterCount()"
+    (searchQueryChange)="onSearchQueryChange($event)"
+    (openFilters)="onOpenFilters()"
+    (refresh)="refresh()"
+  />
+
+  <neo-scout-filter-dialog
+    [visible]="filterDialogOpen()"
+    [filter]="filter()"
+    (visibleChange)="onFilterDialogVisibleChange($event)"
+    (filterChange)="onFilterChange($event)"
+  />
+
   @if (showInitialSkeleton()) {
   <div
     class="flex min-h-80 flex-col items-center justify-center gap-3"
