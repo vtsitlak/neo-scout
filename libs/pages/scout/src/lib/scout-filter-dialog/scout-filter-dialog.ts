@@ -6,7 +6,7 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { form, FormField } from '@angular/forms/signals';
+import { form, FormField, max, min } from '@angular/forms/signals';
 import { ScoutFilter } from '@neo-scout/stores/scout';
 import { PrimeTemplate } from 'primeng/api';
 import { Button } from 'primeng/button';
@@ -34,7 +34,13 @@ export class ScoutFilterDialog {
   readonly filterChange = output<ScoutFilter>();
 
   readonly #draftModel = signal<ScoutFilterDraft>(emptyScoutFilterDraft());
-  readonly draftForm = form(this.#draftModel);
+  /** min/max schema mirrors HTML bounds via FormField (0–100 Scout scores). */
+  readonly draftForm = form(this.#draftModel, (schema) => {
+    min(schema.minNeoScore, 0);
+    max(schema.minNeoScore, 100);
+    min(schema.minPhaScore, 0);
+    max(schema.minPhaScore, 100);
+  });
 
   constructor() {
     // Reset draft from applied filter whenever the dialog opens.
