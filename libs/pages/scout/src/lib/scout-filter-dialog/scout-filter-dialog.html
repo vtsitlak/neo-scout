@@ -1,0 +1,62 @@
+<p-dialog
+  header="Filter candidates"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="true"
+  [style]="{ width: 'min(28rem, 95vw)' }"
+  [visible]="visible()"
+  (visibleChange)="onVisibleChange($event)"
+>
+  <div class="flex flex-col gap-4 py-1">
+    <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
+      <span>Minimum NEO score</span>
+      <input
+        pInputText
+        type="number"
+        class="w-full"
+        aria-label="Minimum NEO score"
+        [formField]="draftForm.minNeoScore"
+      />
+    </label>
+
+    <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
+      <span>Minimum PHA score</span>
+      <input
+        pInputText
+        type="number"
+        class="w-full"
+        aria-label="Minimum PHA score"
+        [formField]="draftForm.minPhaScore"
+      />
+    </label>
+
+    <label class="flex items-center gap-3 text-sm text-[var(--ns-fg)]">
+      <input
+        type="checkbox"
+        class="size-4"
+        aria-label="Has close approach only"
+        [formField]="draftForm.hasCloseApproach"
+      />
+      <span>Has close approach only</span>
+    </label>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex w-full flex-wrap items-center justify-end gap-2">
+      <p-button
+        label="Clear"
+        severity="secondary"
+        [text]="true"
+        (onClick)="clear()"
+      />
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="cancel()"
+      />
+      <p-button label="Apply" (onClick)="apply()" />
+    </div>
+  </ng-template>
+</p-dialog>

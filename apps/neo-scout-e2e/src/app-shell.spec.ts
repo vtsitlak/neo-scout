@@ -59,7 +59,9 @@ test.describe('NEO Scout app shell', () => {
     await expect(page.locator('ag-grid-angular')).toBeVisible({
       timeout: 60_000,
     });
-    await expect(page.getByText(/^Showing \d+–\d+ of \d+$/)).toBeVisible();
+    await expect(
+      page.getByText(/^Showing \d+ of \d+ candidates$/),
+    ).toBeVisible();
 
     await nav.getByRole('button', { name: 'Contact' }).click();
     await expect(page).toHaveURL(/\/contact$/);

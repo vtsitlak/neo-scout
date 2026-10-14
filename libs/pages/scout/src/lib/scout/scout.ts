@@ -3,20 +3,23 @@ import {
   Component,
   computed,
   inject,
+  signal,
 } from '@angular/core';
 import { ScoutCandidate } from '@neo-scout/api';
-import { ScoutFacade } from '@neo-scout/stores/scout';
+import { ScoutFacade, ScoutFilter } from '@neo-scout/stores/scout';
 import { ThemeStore } from '@neo-scout/stores/theme';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GetRowIdParams } from 'ag-grid-community';
 import { Button } from 'primeng/button';
 import { Skeleton } from 'primeng/skeleton';
+import { ScoutFilterDialog } from '../scout-filter-dialog/scout-filter-dialog';
+import { ScoutToolbar } from '../scout-toolbar/scout-toolbar';
 import { SCOUT_COLUMN_DEFS } from './scout-columns';
 import { scoutGridThemeFor } from './scout-grid.theme';
 
 @Component({
   selector: 'neo-scout',
-  imports: [AgGridAngular, Button, Skeleton],
+  imports: [AgGridAngular, Button, Skeleton, ScoutFilterDialog, ScoutToolbar],
   templateUrl: './scout.html',
   styleUrl: './scout.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +37,8 @@ export class Scout {
     sortable: true,
     resizable: true,
     filter: false,
+    wrapHeaderText: true,
+    autoHeaderHeight: true,
   };
 
   readonly rowData = this.scoutFacade.filteredCandidates;
@@ -41,6 +46,25 @@ export class Scout {
   readonly error = this.scoutFacade.error;
   readonly totalCandidates = this.scoutFacade.totalCandidates;
   readonly totalFilteredCandidates = this.scoutFacade.totalFilteredCandidates;
+  readonly searchQuery = this.scoutFacade.searchQuery;
+  readonly filter = this.scoutFacade.filter;
+
+  readonly activeFilterCount = computed(() => {
+    const current = this.filter();
+    let count = 0;
+    if (current.minNeoScore != null) {
+      count += 1;
+    }
+    if (current.minPhaScore != null) {
+      count += 1;
+    }
+    if (current.hasCloseApproach === true) {
+      count += 1;
+    }
+    return count;
+  });
+
+  readonly filterDialogOpen = signal(false);
 
   readonly rowSummary = computed(() => {
     const filtered = this.totalFilteredCandidates();
@@ -48,7 +72,7 @@ export class Scout {
     if (filtered === 0) {
       return `Showing 0 of ${total}`;
     }
-    return `Showing 1–${filtered} of ${total}`;
+    return `Showing ${filtered} of ${total} candidates`;
   });
 
   readonly showInitialSkeleton = computed(
@@ -67,6 +91,22 @@ export class Scout {
 
   constructor() {
     this.scoutFacade.loadAll();
+  }
+
+  protected onSearchQueryChange(query: string): void {
+    this.scoutFacade.setSearch(query);
+  }
+
+  protected onOpenFilters(): void {
+    this.filterDialogOpen.set(true);
+  }
+
+  protected onFilterDialogVisibleChange(open: boolean): void {
+    this.filterDialogOpen.set(open);
+  }
+
+  protected onFilterChange(filter: ScoutFilter): void {
+    this.scoutFacade.setFilter(filter);
   }
 
   protected refresh(): void {
