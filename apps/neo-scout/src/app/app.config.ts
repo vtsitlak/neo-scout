@@ -26,8 +26,7 @@ function scoutApiUrl(): string {
   if (isDevMode()) {
     return '/api/scout';
   }
-  const baseHref =
-    document.querySelector('base')?.getAttribute('href') ?? '/';
+  const baseHref = document.querySelector('base')?.getAttribute('href') ?? '/';
   const normalized = baseHref.endsWith('/') ? baseHref : `${baseHref}/`;
   return `${normalized}scout.api.json`;
 }
