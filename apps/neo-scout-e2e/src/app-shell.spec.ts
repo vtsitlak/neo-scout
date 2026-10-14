@@ -53,9 +53,16 @@ test.describe('NEO Scout app shell', () => {
 
     await expect(page.locator('neo-home')).toBeVisible();
 
-    await nav.getByRole('button', { name: 'Scout' }).click();
+    await nav.getByRole('link', { name: 'Scout' }).click();
     await expect(page).toHaveURL(/\/scout$/);
     await expect(page.locator('neo-scout')).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'Scout' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    await expect(
+      nav.getByRole('link', { name: 'Contact' }),
+    ).not.toHaveAttribute('aria-current');
     await expect(page.locator('ag-grid-angular')).toBeVisible({
       timeout: 60_000,
     });
@@ -63,9 +70,16 @@ test.describe('NEO Scout app shell', () => {
       page.getByText(/^Showing \d+ of \d+ candidates$/),
     ).toBeVisible();
 
-    await nav.getByRole('button', { name: 'Contact' }).click();
+    await nav.getByRole('link', { name: 'Contact' }).click();
     await expect(page).toHaveURL(/\/contact$/);
     await expect(page.locator('neo-contact')).toBeAttached();
+    await expect(nav.getByRole('link', { name: 'Contact' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    await expect(nav.getByRole('link', { name: 'Scout' })).not.toHaveAttribute(
+      'aria-current',
+    );
 
     await page.getByRole('button', { name: 'NEO Scout home' }).click();
     await expect(page).toHaveURL(/\/$/);
