@@ -134,6 +134,25 @@ describe('Scout', () => {
     expect(component.activeFilterCount()).toBe(1);
   });
 
+  it('should open the candidate detail dialog from a row click', () => {
+    const selected = candidate('OBJ01');
+
+    component['onRowClicked']({ data: selected } as never);
+
+    expect(component.selectedCandidate()).toEqual(selected);
+    expect(component.detailDialogOpen()).toBe(true);
+  });
+
+  it('should clear the selected candidate when the detail dialog closes', () => {
+    component.selectedCandidate.set(candidate('OBJ01'));
+    component.detailDialogOpen.set(true);
+
+    component['onDetailDialogVisibleChange'](false);
+
+    expect(component.detailDialogOpen()).toBe(false);
+    expect(component.selectedCandidate()).toBeNull();
+  });
+
   it('should show a centered skeleton while the initial load is empty', () => {
     const root = fixture.nativeElement as HTMLElement;
 

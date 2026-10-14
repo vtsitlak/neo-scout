@@ -9,9 +9,15 @@ import { ScoutCandidate } from '@neo-scout/api';
 import { ScoutFacade, ScoutFilter } from '@neo-scout/stores/scout';
 import { ThemeStore } from '@neo-scout/stores/theme';
 import { AgGridAngular } from 'ag-grid-angular';
-import type { ColDef, GetRowIdParams } from 'ag-grid-community';
+import type {
+  ColDef,
+  GetRowIdParams,
+  RowClickedEvent,
+  RowStyle,
+} from 'ag-grid-community';
 import { Button } from 'primeng/button';
 import { Skeleton } from 'primeng/skeleton';
+import { ScoutCandidateDialog } from '../scout-candidate-dialog/scout-candidate-dialog';
 import { ScoutFilterDialog } from '../scout-filter-dialog/scout-filter-dialog';
 import { ScoutToolbar } from '../scout-toolbar/scout-toolbar';
 import { SCOUT_COLUMN_DEFS } from './scout-columns';
@@ -19,7 +25,14 @@ import { scoutGridThemeFor } from './scout-grid.theme';
 
 @Component({
   selector: 'neo-scout',
-  imports: [AgGridAngular, Button, Skeleton, ScoutFilterDialog, ScoutToolbar],
+  imports: [
+    AgGridAngular,
+    Button,
+    Skeleton,
+    ScoutCandidateDialog,
+    ScoutFilterDialog,
+    ScoutToolbar,
+  ],
   templateUrl: './scout.html',
   styleUrl: './scout.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,6 +78,8 @@ export class Scout {
   });
 
   readonly filterDialogOpen = signal(false);
+  readonly detailDialogOpen = signal(false);
+  readonly selectedCandidate = signal<ScoutCandidate | null>(null);
 
   readonly rowSummary = computed(() => {
     const filtered = this.totalFilteredCandidates();
@@ -109,9 +124,27 @@ export class Scout {
     this.scoutFacade.setFilter(filter);
   }
 
+  protected onRowClicked(event: RowClickedEvent<ScoutCandidate>): void {
+    if (!event.data) {
+      return;
+    }
+    this.selectedCandidate.set(event.data);
+    this.detailDialogOpen.set(true);
+  }
+
+  protected onDetailDialogVisibleChange(open: boolean): void {
+    this.detailDialogOpen.set(open);
+    if (!open) {
+      this.selectedCandidate.set(null);
+    }
+  }
+
   protected refresh(): void {
     this.scoutFacade.reload();
   }
+
+  /** Applied by AG Grid to every row (encapsulation-safe clickable cursor). */
+  protected readonly rowStyle: RowStyle = { cursor: 'pointer' };
 
   protected getRowId = (params: GetRowIdParams<ScoutCandidate>): string =>
     params.data.objectName;
