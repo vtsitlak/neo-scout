@@ -2,7 +2,7 @@
   "name": "neo-scout",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "prefix": "app",
+  "prefix": "neo",
   "sourceRoot": "apps/neo-scout/src",
   "tags": [],
   "targets": {
@@ -49,6 +49,9 @@
       "continuous": true,
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "apps/neo-scout/proxy.conf.json"
+      },
       "configurations": {
         "production": {
           "buildTarget": "neo-scout:build:production"

@@ -1,32 +1,32 @@
-<main class="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
-  <section class="mx-auto flex max-w-5xl flex-col gap-6">
-    <header class="flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <p class="text-sm font-medium tracking-wide text-slate-500 uppercase">
-          Nx Angular monorepo
-        </p>
-        <h1 class="text-3xl font-semibold tracking-tight">
-          {{ store.title() }}
-        </h1>
-      </div>
-      <p-button
-        label="Stack ready"
-        icon="pi pi-check"
-        [disabled]="store.ready()"
-      />
-    </header>
+<div class="flex min-h-screen flex-col bg-(--ns-bg) text-(--ns-fg)">
+  <p-toast position="center" />
 
-    <div
-      class="h-64 w-full overflow-hidden rounded-lg border border-slate-200 bg-white"
+  <neo-header-navigation [items]="navItems">
+    <p-button
+      startPlaceholder
+      type="button"
+      routerLink="/"
+      [text]="true"
+      severity="secondary"
+      ariaLabel="NEO Scout home"
+      class="p-1!"
     >
-      <ag-grid-angular
-        class="h-full w-full"
-        [theme]="gridTheme"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
+      <img
+        [ngSrc]="logoSrc()"
+        alt="NEO Scout"
+        width="168"
+        height="42"
+        priority
+        class="h-8 w-auto"
       />
-    </div>
+    </p-button>
 
+    <neo-theme-toggle endPlaceholder />
+  </neo-header-navigation>
+
+  <main class="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
     <router-outlet />
-  </section>
-</main>
+  </main>
+
+  <neo-info-footer [appInfo]="appInfo" />
+</div>

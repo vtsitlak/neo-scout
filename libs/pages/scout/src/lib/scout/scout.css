@@ -1,0 +1,9 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.scout-grid {
+  height: min(70vh, 40rem);
+  width: 100%;
+}

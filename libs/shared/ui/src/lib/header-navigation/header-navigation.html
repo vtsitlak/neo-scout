@@ -1,0 +1,36 @@
+<p-toolbar
+  class="rounded-none! border-0! border-b! border-(--ns-border)! bg-(--ns-bg-elevated)! px-4! py-2! text-(--ns-fg)"
+>
+  <ng-template #start>
+    <div class="flex min-w-0 items-center gap-3">
+      <ng-content select="[startPlaceholder]" />
+    </div>
+  </ng-template>
+
+  <ng-template #end>
+    <div class="flex items-center">
+      <nav class="flex flex-wrap items-center gap-1" aria-label="Primary">
+        @for (item of items(); track item.link) {
+        <a
+          pButton
+          #rla="routerLinkActive"
+          [routerLink]="item.link"
+          routerLinkActive
+          [routerLinkActiveOptions]="{ exact: item.link === '/' }"
+          ariaCurrentWhenActive="page"
+          [text]="!rla.isActive"
+          [severity]="rla.isActive ? 'primary' : 'secondary'"
+          class="font-display! text-sm!"
+          >{{ item.text }}</a
+        >
+        }
+      </nav>
+
+      <div
+        class="ms-3 flex items-center gap-2 border-l border-(--ns-border) ps-3"
+      >
+        <ng-content select="[endPlaceholder]" />
+      </div>
+    </div>
+  </ng-template>
+</p-toolbar>

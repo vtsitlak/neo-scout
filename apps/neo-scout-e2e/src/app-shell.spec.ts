@@ -4,42 +4,84 @@ test.describe('NEO Scout app shell', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await expect(
-      page.getByRole('heading', { level: 1, name: 'NEO Scout' }),
-    ).toBeVisible({ timeout: 60_000 });
+      page.getByRole('img', { name: 'NEO Scout' }).first(),
+    ).toBeVisible({
+      timeout: 60_000,
+    });
   });
 
-  test('shows the document and page titles', async ({ page }) => {
+  test('shows the document title, header, logos, and footer', async ({
+    page,
+  }) => {
     await expect(page).toHaveTitle(/NEO Scout/);
-    await expect(
-      page.getByRole('heading', { level: 1, name: 'NEO Scout' }),
-    ).toBeVisible();
+    await expect(page.locator('neo-header-navigation')).toBeVisible();
+    await expect(page.getByRole('img', { name: 'NEO Scout' })).toHaveCount(2);
+    await expect(page.locator('neo-info-footer')).toBeVisible();
   });
 
-  test('shows the stack-ready action', async ({ page }) => {
-    await expect(
-      page.getByRole('button', { name: /Stack ready/i }),
-    ).toBeDisabled();
+  test('shows home intro and CTAs to Scout and Contact', async ({ page }) => {
+    await expect(page.locator('neo-home')).toBeVisible();
+    await expect(page.getByText(/near-Earth objects \(NEOs\)/i)).toBeVisible();
+    await expect(page.getByText(/NASA\/JPL Scout/i).first()).toBeVisible();
+
+    await page.getByRole('main').getByRole('button', { name: 'Scout' }).click();
+    await expect(page).toHaveURL(/\/scout$/);
+
+    await page.getByRole('button', { name: 'NEO Scout home' }).click();
+    await expect(page).toHaveURL(/\/$/);
+
+    await page
+      .getByRole('main')
+      .getByRole('button', { name: 'Contact' })
+      .click();
+    await expect(page).toHaveURL(/\/contact$/);
   });
 
-  test('shows the community stack grid', async ({ page }) => {
-    const grid = page.getByRole('grid');
+  test('toggles between light and dark themes', async ({ page }) => {
+    const toggle = page.getByRole('button', { name: 'Toggle color theme' });
 
-    await expect(grid).toBeVisible();
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+    await expect(page.locator('html')).toHaveClass(/dark/);
+  });
+
+  test('navigates between lazy-loaded pages from the header', async ({
+    page,
+  }) => {
+    const nav = page.getByRole('navigation', { name: 'Primary' });
+
+    await expect(page.locator('neo-home')).toBeVisible();
+
+    await nav.getByRole('link', { name: 'Scout' }).click();
+    await expect(page).toHaveURL(/\/scout$/);
+    await expect(page.locator('neo-scout')).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'Scout' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
     await expect(
-      grid.getByRole('columnheader', { name: 'Name' }),
-    ).toBeVisible();
+      nav.getByRole('link', { name: 'Contact' }),
+    ).not.toHaveAttribute('aria-current');
+    await expect(page.locator('ag-grid-angular')).toBeVisible({
+      timeout: 60_000,
+    });
     await expect(
-      grid.getByRole('columnheader', { name: 'Status' }),
+      page.getByText(/^Showing \d+ of \d+ candidates$/),
     ).toBeVisible();
-    await expect(
-      grid.getByRole('gridcell', { name: 'Workspace' }),
-    ).toBeVisible();
-    await expect(
-      grid.getByRole('gridcell', { name: 'Initialized' }),
-    ).toBeVisible();
-    await expect(grid.getByRole('gridcell', { name: 'PrimeNG' })).toBeVisible();
-    await expect(
-      grid.getByRole('gridcell', { name: 'AG Grid Community' }),
-    ).toBeVisible();
+
+    await nav.getByRole('link', { name: 'Contact' }).click();
+    await expect(page).toHaveURL(/\/contact$/);
+    await expect(page.locator('neo-contact')).toBeAttached();
+    await expect(nav.getByRole('link', { name: 'Contact' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    await expect(nav.getByRole('link', { name: 'Scout' })).not.toHaveAttribute(
+      'aria-current',
+    );
+
+    await page.getByRole('button', { name: 'NEO Scout home' }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.locator('neo-home')).toBeVisible();
   });
 });

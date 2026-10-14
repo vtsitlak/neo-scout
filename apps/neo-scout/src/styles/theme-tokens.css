@@ -1,0 +1,89 @@
+/*
+  NEO Scout design tokens
+  Single source for Tailwind (@theme), app chrome, and library bridges.
+  Scientific palette: deep-space ink + orbital cyan + meteor amber.
+*/
+
+@theme {
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'IBM Plex Sans', ui-sans-serif, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --color-brand-50: #ecfeff;
+  --color-brand-100: #cffafe;
+  --color-brand-200: #a5f3fc;
+  --color-brand-300: #67e8f9;
+  --color-brand-400: #22d3ee;
+  --color-brand-500: #06b6d4;
+  --color-brand-600: #0891b2;
+  --color-brand-700: #0e7490;
+  --color-brand-800: #155e75;
+  --color-brand-900: #164e63;
+  --color-brand-950: #083344;
+
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+
+  --color-space-50: #f5f7fb;
+  --color-space-100: #e8eef7;
+  --color-space-200: #d5deec;
+  --color-space-300: #b4c2d9;
+  --color-space-400: #8a9bb8;
+  --color-space-500: #6b7c99;
+  --color-space-600: #536178;
+  --color-space-700: #414c5f;
+  --color-space-800: #2c3444;
+  --color-space-900: #1a2130;
+  --color-space-950: #0b1220;
+}
+
+:root {
+  color-scheme: light;
+
+  --ns-bg: var(--color-space-50);
+  --ns-bg-elevated: #ffffff;
+  --ns-fg: var(--color-space-950);
+  --ns-fg-muted: var(--color-space-600);
+  --ns-border: var(--color-space-200);
+  --ns-primary: var(--color-brand-700);
+  --ns-primary-fg: #ffffff;
+  --ns-accent: var(--color-accent-600);
+  --ns-ring: var(--color-brand-500);
+  --ns-grid-header: var(--color-space-100);
+  --ns-grid-row-hover: color-mix(in oklab, var(--color-brand-500) 8%, white);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --ns-bg: var(--color-space-950);
+  --ns-bg-elevated: var(--color-space-900);
+  --ns-fg: var(--color-space-50);
+  --ns-fg-muted: var(--color-space-400);
+  --ns-border: var(--color-space-800);
+  --ns-primary: var(--color-brand-400);
+  --ns-primary-fg: var(--color-space-950);
+  --ns-accent: var(--color-accent-400);
+  --ns-ring: var(--color-brand-400);
+  --ns-grid-header: var(--color-space-900);
+  --ns-grid-row-hover: color-mix(
+    in oklab,
+    var(--color-brand-400) 12%,
+    var(--color-space-900)
+  );
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--ns-bg);
+  color: var(--ns-fg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

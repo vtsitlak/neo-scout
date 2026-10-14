@@ -1,37 +1,50 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AgGridAngular } from 'ag-grid-angular';
-import type { ColDef } from 'ag-grid-community';
-import { themeQuartz } from 'ag-grid-community';
+import {
+  HeaderNavigation,
+  InfoFooter,
+  ThemeToggle,
+  type MenuItem,
+} from '@neo-scout/shared/ui';
+import { ThemeStore } from '@neo-scout/stores/theme';
 import { Button } from 'primeng/button';
-import { AppStore } from './app.store';
-
-type ScoutRow = {
-  name: string;
-  status: string;
-};
+import { Toast } from 'primeng/toast';
+import { APP_INFO } from './app-info.const';
 
 @Component({
-  imports: [RouterModule, Button, AgGridAngular],
-  selector: 'app-root',
+  imports: [
+    RouterModule,
+    NgOptimizedImage,
+    Button,
+    Toast,
+    HeaderNavigation,
+    ThemeToggle,
+    InfoFooter,
+  ],
+  selector: 'neo-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  protected readonly store = inject(AppStore);
+  protected readonly themeStore = inject(ThemeStore);
+  protected readonly appInfo = APP_INFO;
 
-  /** AG Grid Community theme — no Enterprise licence required. */
-  protected readonly gridTheme = themeQuartz;
-
-  protected readonly columnDefs: ColDef<ScoutRow>[] = [
-    { field: 'name', flex: 1 },
-    { field: 'status', flex: 1 },
+  protected readonly navItems: readonly MenuItem[] = [
+    { text: 'Scout', link: '/scout' },
+    { text: 'Contact', link: '/contact' },
   ];
 
-  protected readonly rowData: ScoutRow[] = [
-    { name: 'Workspace', status: 'Initialized' },
-    { name: 'PrimeNG', status: 'Ready' },
-    { name: 'AG Grid Community', status: 'Ready' },
-  ];
+  /** Compact nav lockup — ThemeStore switch (not OS prefers-color-scheme). */
+  readonly logoSrc = computed(() =>
+    this.themeStore.mode() === 'dark'
+      ? 'brand/logo-dark.svg'
+      : 'brand/logo.svg',
+  );
 }

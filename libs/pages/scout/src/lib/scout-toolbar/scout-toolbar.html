@@ -1,0 +1,42 @@
+<div
+  class="flex w-full flex-col gap-3 sm:flex-row sm:items-center"
+  role="toolbar"
+  aria-label="Scout search and filters"
+>
+  <p-iconfield iconPosition="left" class="min-w-0 w-full flex-1">
+    <p-inputicon class="pi pi-search" />
+    <input
+      pInputText
+      type="search"
+      class="w-full"
+      placeholder="Search by object name"
+      aria-label="Search by object name"
+      [value]="searchQuery()"
+      (input)="onSearchInput($event)"
+    />
+  </p-iconfield>
+
+  <div class="flex shrink-0 items-center gap-3">
+    <p-overlaybadge
+      class="me-2"
+      [value]="activeFilterCount()"
+      severity="info"
+      [badgeDisabled]="filterBadgeDisabled()"
+    >
+      <p-button
+        label="Filter"
+        icon="pi pi-filter"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="onFilterClick()"
+      />
+    </p-overlaybadge>
+    <p-button
+      label="Refresh"
+      icon="pi pi-refresh"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="onRefreshClick()"
+    />
+  </div>
+</div>

@@ -1,102 +1,118 @@
-# NeoScout
+# NEO Scout
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Angular + Nx demo app for browsing [NASA/JPL Scout](https://ssd-api.jpl.nasa.gov/doc/scout.html) near-Earth object candidates: search/filter a grid, open candidate detail, and send a simulated contact inquiry.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+**Live demo:** [https://vtsitlak.github.io/neo-scout/](https://vtsitlak.github.io/neo-scout/)  
+**Source:** [https://github.com/vtsitlak/neo-scout](https://github.com/vtsitlak/neo-scout)
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## Prerequisites
 
-## Run tasks
+- Node.js 22+
+- npm
 
-To run the dev server for your app, use:
-
-```sh
-npx nx serve neo-scout
-```
-
-To create a production bundle:
+## Run the app
 
 ```sh
-npx nx build neo-scout
+npm install
+npm start
 ```
 
-To see all available targets to run for a project, run:
+Open [http://localhost:4200](http://localhost:4200). In development, Scout API calls go through `/api/scout` (dev-server proxy) to avoid CORS.
+
+Production build:
 
 ```sh
-npx nx show project neo-scout
+npm run build
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
+GitHub Pages build (correct `base-href`):
 
 ```sh
-npx nx g @nx/angular:app demo
+npm run build:pages
 ```
 
-To generate a new library, use:
+## Tests
 
 ```sh
-npx nx g @nx/angular:lib mylib
+# Unit tests (Vitest via Nx)
+npm test
+
+# E2E (Playwright) — install browsers once, then run
+npm run e2e:install
+npm run e2e
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+E2E covers the app shell (nav, theme), Contact submit flow, and Scout search / filters / candidate detail (Scout API is mocked in those tests).
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Also available: `npm run lint`, `npm run format:check`.
 
-## Set up CI!
+## Architecture
 
-### Step 1
+```mermaid
+flowchart TB
+  subgraph app["apps/neo-scout"]
+    Shell["App shell · header · theme · footer"]
+  end
 
-To connect to Nx Cloud, run the following command:
+  subgraph pages["libs/pages"]
+    Home["home"]
+    ScoutPage["scout"]
+    ContactPage["contact"]
+  end
 
-```sh
-npx nx connect
+  subgraph stores["libs/stores"]
+    ScoutStore["scout"]
+    ContactStore["contact"]
+    ThemeStore["theme"]
+  end
+
+  subgraph shared["libs/shared"]
+    UI["ui"]
+    Services["services"]
+  end
+
+  Api["libs/api · Scout HTTP"]
+
+  Shell --> Home
+  Shell --> ScoutPage
+  Shell --> ContactPage
+  Shell --> UI
+  Shell --> ThemeStore
+
+  ScoutPage --> ScoutStore
+  ContactPage --> ContactStore
+  ScoutStore --> Api
+  ContactStore --> Services
+  ScoutStore --> Services
 ```
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+Lazy routes: `/` (Home), `/scout`, `/contact`. Feature pages talk to SignalStore facades; Scout data comes from `libs/api`.
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## Release / deploy
 
-### Step 2
+**Branching:** feature work PRs into `develop`. Releases promote `develop` → `main`, then tag.
 
-Use the following command to configure a CI workflow for your workspace:
+**Version bumps** (keep in sync):
 
-```sh
-npx nx g ci-workflow
-```
+1. `package.json`
+2. `apps/neo-scout/src/app/package-meta.json` (footer version)
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Suggested flow:
 
-## Install Nx Console
+1. From `develop`, cut `release/vX.Y.Z` (optional but clear).
+2. Bump both version files; commit e.g. `Release v1.0.0`.
+3. PR → `develop` and merge.
+4. PR `develop` → `main` and merge.
+5. Tag the merge commit on `main`: `git tag v1.0.0 && git push origin v1.0.0`.
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+You do **not** need a long-lived release branch beyond the version bump.
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+**Deploy:** GitHub Actions (`.github/workflows/ci.yml`) runs format, lint, unit tests, build, and Playwright e2e on PRs/pushes to `develop` and `main`. On push to those branches, after quality + e2e pass, it builds with `npm run build:pages` and deploys to GitHub Pages.
 
-## Useful links
+## Assumptions & trade-offs
 
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- **Full Scout list client-side** — the public Scout API has no paging; search/filter/sort run in the Scout store over the loaded list.
+- **Contact submit is simulated** — no backend; the contact store fakes success/failure for UX demos.
+- **Dev proxy for Scout** — production/Pages call the NASA URL directly; local serve uses `/api/scout`.
+- **SPA on Pages** — CI copies `index.html` to `404.html` so deep links work on GitHub Pages.
+- **Scores are interest flags** — Scout NEO/PHA scores are not rigorous impact probabilities; “hazard interest” in the UI is a simple blend for display.
