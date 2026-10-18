@@ -98,6 +98,15 @@ jobs:
             -o apps/neo-scout/public/scout.api.json
           test -s apps/neo-scout/public/scout.api.json
 
+      # Access key stays out of git; baked into the static site at deploy.
+      - name: Write Web3Forms config
+        env:
+          WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
+        run: |
+          test -n "$WEB3FORMS_ACCESS_KEY"
+          printf '%s\n' "{\"accessKey\":\"${WEB3FORMS_ACCESS_KEY}\"}" \
+            > apps/neo-scout/public/contact.web3forms.json
+
       - name: Build for GitHub Pages
         run: npm run build:pages
 

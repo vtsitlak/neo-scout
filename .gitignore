@@ -110,5 +110,8 @@ apps/*/public/apple-touch-icon.png
 # Scout snapshot for Pages (fetched in CI / npm run fetch:scout-snapshot)
 apps/neo-scout/public/scout.api.json
 
+# Web3Forms access key (written in CI from secrets / local copy of example)
+apps/neo-scout/public/contact.web3forms.json
+
 .angular
 .vitest
