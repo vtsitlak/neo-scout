@@ -31,7 +31,7 @@ describe('ContactFacade', () => {
     facade = TestBed.inject(ContactFacade);
   });
 
-  it('should move to success after a simulated submit', async () => {
+  it('should move to success after a successful submit', async () => {
     const pending = facade.submit(sample);
     expect(facade.status()).toBe('submitting');
 
