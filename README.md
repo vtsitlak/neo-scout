@@ -1,6 +1,6 @@
 # NEO Scout
 
-Angular + Nx demo app for browsing [NASA/JPL Scout](https://ssd-api.jpl.nasa.gov/doc/scout.html) near-Earth object candidates: search/filter a grid, open candidate detail, and send a simulated contact inquiry.
+Angular + Nx demo app for browsing [NASA/JPL Scout](https://ssd-api.jpl.nasa.gov/doc/scout.html) near-Earth object candidates: search/filter a grid, open candidate detail, and send a contact inquiry (Web3Forms).
 
 **Live demo:** [https://vtsitlak.github.io/neo-scout/](https://vtsitlak.github.io/neo-scout/)  
 **Source:** [https://github.com/vtsitlak/neo-scout](https://github.com/vtsitlak/neo-scout)
@@ -112,7 +112,7 @@ You do **not** need a long-lived release branch beyond the version bump.
 ## Assumptions & trade-offs
 
 - **Full Scout list client-side** — the public Scout API has no paging; search/filter/sort run in the Scout store over the loaded list.
-- **Contact submit is simulated** — no backend; the contact store fakes success/failure for UX demos.
+- **Contact submit** — Web3Forms (access key from `WEB3FORMS_ACCESS_KEY` at Pages deploy / local `contact.web3forms.json`).
 - **Dev proxy for Scout** — local serve uses `/api/scout` → JPL. GitHub Pages cannot call JPL from the browser (CORS), so CI fetches a same-origin `scout.api.json` snapshot at deploy time (data refreshes on each Pages deploy).
 - **SPA on Pages** — CI copies `index.html` to `404.html` so deep links work on GitHub Pages.
 - **Scores are interest flags** — Scout NEO/PHA scores are not rigorous impact probabilities; “hazard interest” in the UI is a simple blend for display.

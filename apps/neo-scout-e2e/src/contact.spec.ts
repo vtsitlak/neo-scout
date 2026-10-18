@@ -1,7 +1,29 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+async function mockWeb3Forms(page: Page): Promise<void> {
+  await page.route(/\/contact\.web3forms\.json(\?|$)/, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ accessKey: 'e2e-test-access-key' }),
+    });
+  });
+
+  await page.route('https://api.web3forms.com/submit', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        message: 'Email sent successfully!',
+      }),
+    });
+  });
+}
 
 test.describe('Contact page', () => {
   test.beforeEach(async ({ page }) => {
+    await mockWeb3Forms(page);
     await page.goto('/contact', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('neo-contact')).toBeVisible({ timeout: 60_000 });
   });
