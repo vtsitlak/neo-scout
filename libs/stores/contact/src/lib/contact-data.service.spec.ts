@@ -30,7 +30,9 @@ async function expectRequest(
       return matches[0];
     }
     if (matches.length > 1) {
-      throw new Error(`Expected one request for ${url}, found ${matches.length}`);
+      throw new Error(
+        `Expected one request for ${url}, found ${matches.length}`,
+      );
     }
     await Promise.resolve();
   }
@@ -84,7 +86,9 @@ describe('ContactDataService', () => {
 
   it('should reuse a cached access key on a second submit', async () => {
     const first = service.submit(sample);
-    (await expectRequest(httpMock, configUrl)).flush({ accessKey: 'cached-key' });
+    (await expectRequest(httpMock, configUrl)).flush({
+      accessKey: 'cached-key',
+    });
     (await expectRequest(httpMock, submitUrl)).flush({ success: true });
     await first;
 
