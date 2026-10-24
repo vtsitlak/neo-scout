@@ -111,4 +111,22 @@ describe('ScoutApiService', () => {
     expect(scoutError.status).toBe(503);
     expect(scoutError.message).toContain('503');
   });
+
+  it('should map invalid JSON shapes to ScoutApiError', () => {
+    let captured: unknown;
+
+    service.getCandidates().subscribe({
+      next: () => {
+        throw new Error('expected error path');
+      },
+      error: (error: unknown) => {
+        captured = error;
+      },
+    });
+
+    httpMock.expectOne(testUrl).flush({ data: 'not-an-array' });
+
+    expect(captured).toBeInstanceOf(ScoutApiError);
+    expect((captured as ScoutApiError).message).toContain('validation');
+  });
 });

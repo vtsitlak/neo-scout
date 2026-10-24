@@ -1,5 +1,5 @@
 <p-toolbar
-  class="rounded-none! border-0! border-b! border-(--ns-border)! bg-(--ns-bg-elevated)! px-4! py-2! text-(--ns-fg)"
+  class="rounded-none! border-0! border-b! border-ns-border! bg-ns-bg-elevated! px-4! py-2! text-ns-fg"
 >
   <ng-template #start>
     <div class="flex min-w-0 items-center gap-3">
@@ -26,9 +26,7 @@
         }
       </nav>
 
-      <div
-        class="ms-3 flex items-center gap-2 border-l border-(--ns-border) ps-3"
-      >
+      <div class="ms-3 flex items-center gap-2 border-l border-ns-border ps-3">
         <ng-content select="[endPlaceholder]" />
       </div>
     </div>

@@ -38,6 +38,24 @@
   --color-space-950: #0b1220;
 }
 
+/*
+  Semantic roles that flip under `.dark`. Use `@theme inline` so utilities
+  like `text-ns-fg` keep a live `var(--ns-fg)` reference (Tailwind v4).
+*/
+@theme inline {
+  --color-ns-bg: var(--ns-bg);
+  --color-ns-bg-elevated: var(--ns-bg-elevated);
+  --color-ns-fg: var(--ns-fg);
+  --color-ns-fg-muted: var(--ns-fg-muted);
+  --color-ns-border: var(--ns-border);
+  --color-ns-primary: var(--ns-primary);
+  --color-ns-primary-fg: var(--ns-primary-fg);
+  --color-ns-accent: var(--ns-accent);
+  --color-ns-ring: var(--ns-ring);
+  --color-ns-grid-header: var(--ns-grid-header);
+  --color-ns-grid-row-hover: var(--ns-grid-row-hover);
+}
+
 :root {
   color-scheme: light;
 
