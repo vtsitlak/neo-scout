@@ -1,11 +1,9 @@
 <section class="mx-auto flex w-full max-w-5xl flex-col gap-8 py-4 sm:py-8">
   <header class="mx-auto max-w-2xl text-center">
-    <h1
-      class="font-display m-0 text-3xl tracking-tight text-[var(--ns-fg)] sm:text-4xl"
-    >
+    <h1 class="font-display m-0 text-3xl tracking-tight text-ns-fg sm:text-4xl">
       Contact NEO Scout
     </h1>
-    <p class="mt-3 text-base text-[var(--ns-fg-muted)] sm:text-lg">
+    <p class="mt-3 text-base text-ns-fg-muted sm:text-lg">
       Questions about the Scout board, data sources, or collaboration? Reach out
       below — we read every note.
     </p>
@@ -16,8 +14,8 @@
   >
     <aside class="flex flex-col gap-8" aria-label="Company contact details">
       <div class="flex flex-col gap-2">
-        <h2 class="m-0 text-sm font-semibold text-[var(--ns-fg)]">Office</h2>
-        <p class="m-0 text-sm leading-relaxed text-[var(--ns-fg-muted)]">
+        <h2 class="m-0 text-sm font-semibold text-ns-fg">Office</h2>
+        <p class="m-0 text-sm leading-relaxed text-ns-fg-muted">
           NEO Scout<br />
           Near-Earth Object desk<br />
           Remote-first · UTC
@@ -26,34 +24,34 @@
 
       <div class="flex flex-col gap-4">
         <div class="flex flex-col gap-1">
-          <h2 class="m-0 text-sm font-semibold text-[var(--ns-fg)]">Support</h2>
+          <h2 class="m-0 text-sm font-semibold text-ns-fg">Support</h2>
           <a
-            class="text-sm text-[var(--ns-primary)] hover:underline"
+            class="text-sm text-ns-primary hover:underline"
             href="mailto:vtsitlak@gmail.com"
             >vtsitlak@gmail.com</a
           >
-          <p class="m-0 text-xs text-[var(--ns-fg-muted)]">
+          <p class="m-0 text-xs text-ns-fg-muted">
             Product help and Scout data questions
           </p>
         </div>
         <div class="flex flex-col gap-1">
-          <h2 class="m-0 text-sm font-semibold text-[var(--ns-fg)]">Press</h2>
+          <h2 class="m-0 text-sm font-semibold text-ns-fg">Press</h2>
           <a
-            class="text-sm text-[var(--ns-primary)] hover:underline"
+            class="text-sm text-ns-primary hover:underline"
             href="mailto:vtsitlak@gmail.com"
             >vtsitlak@gmail.com</a
           >
-          <p class="m-0 text-xs text-[var(--ns-fg-muted)]">
+          <p class="m-0 text-xs text-ns-fg-muted">
             Interviews and project features
           </p>
         </div>
       </div>
 
       <div class="flex flex-col gap-3">
-        <h2 class="m-0 text-sm font-semibold text-[var(--ns-fg)]">Social</h2>
+        <h2 class="m-0 text-sm font-semibold text-ns-fg">Social</h2>
         <div class="flex flex-wrap gap-2">
           <a
-            class="inline-flex size-10 items-center justify-center rounded-md border border-[var(--ns-border)] text-[var(--ns-fg-muted)] transition-colors hover:border-[var(--ns-primary)] hover:text-[var(--ns-primary)]"
+            class="inline-flex size-10 items-center justify-center rounded-md border border-ns-border text-ns-fg-muted transition-colors hover:border-ns-primary hover:text-ns-primary"
             href="https://github.com/vtsitlak/neo-scout"
             target="_blank"
             rel="noopener noreferrer"
@@ -71,7 +69,7 @@
     <div class="min-w-0">
       @if (showSuccess()) {
       <div
-        class="flex flex-col gap-4 rounded-lg border border-[var(--ns-border)] bg-[var(--ns-bg-elevated)] p-6"
+        class="flex flex-col gap-4 rounded-lg border border-ns-border bg-ns-bg-elevated p-6"
         role="status"
         aria-live="polite"
         aria-label="Message sent successfully"
@@ -82,8 +80,8 @@
           styleClass="w-full"
         />
         @if (lastInquiry(); as sent) {
-        <p class="m-0 text-sm text-[var(--ns-fg-muted)]">
-          Sent as <span class="text-[var(--ns-fg)]">{{ sent.name }}</span> · {{
+        <p class="m-0 text-sm text-ns-fg-muted">
+          Sent as <span class="text-ns-fg">{{ sent.name }}</span> · {{
           sent.workEmail }}
         </p>
         }
@@ -104,8 +102,8 @@
         aria-label="Contact inquiry form"
         (submit)="$event.preventDefault(); onSubmit()"
       >
-        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
-          <span>Name <span class="text-[var(--ns-fg-muted)]">*</span></span>
+        <label class="flex flex-col gap-2 text-sm text-ns-fg">
+          <span>Name <span class="text-ns-fg-muted">*</span></span>
           <input
             type="text"
             [class]="fieldClass(inquiryForm.name)"
@@ -118,10 +116,8 @@
           }
         </label>
 
-        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
-          <span
-            >Work email <span class="text-[var(--ns-fg-muted)]">*</span></span
-          >
+        <label class="flex flex-col gap-2 text-sm text-ns-fg">
+          <span>Work email <span class="text-ns-fg-muted">*</span></span>
           <input
             type="email"
             [class]="fieldClass(inquiryForm.workEmail)"
@@ -134,11 +130,8 @@
           }
         </label>
 
-        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
-          <span
-            >Company
-            <span class="text-[var(--ns-fg-muted)]">(optional)</span></span
-          >
+        <label class="flex flex-col gap-2 text-sm text-ns-fg">
+          <span>Company <span class="text-ns-fg-muted">(optional)</span></span>
           <input
             type="text"
             [class]="fieldClass(inquiryForm.company)"
@@ -148,10 +141,10 @@
           />
         </label>
 
-        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
+        <label class="flex flex-col gap-2 text-sm text-ns-fg">
           <span
             >Employee count
-            <span class="text-[var(--ns-fg-muted)]">(optional)</span></span
+            <span class="text-ns-fg-muted">(optional)</span></span
           >
           <select
             [class]="fieldClass(inquiryForm.employeeCount)"
@@ -164,8 +157,8 @@
           </select>
         </label>
 
-        <label class="flex flex-col gap-2 text-sm text-[var(--ns-fg)]">
-          <span>Message <span class="text-[var(--ns-fg-muted)]">*</span></span>
+        <label class="flex flex-col gap-2 text-sm text-ns-fg">
+          <span>Message <span class="text-ns-fg-muted">*</span></span>
           <textarea
             rows="5"
             [class]="fieldClass(inquiryForm.message)"

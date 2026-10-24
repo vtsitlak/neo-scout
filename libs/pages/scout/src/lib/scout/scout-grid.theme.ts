@@ -5,29 +5,13 @@ import {
 } from 'ag-grid-community';
 import type { ThemeMode } from '@neo-scout/stores/theme';
 
-const sharedParams = {
-  fontFamily: 'var(--font-sans)',
-  accentColor: 'var(--ns-primary)',
-  borderColor: 'var(--ns-border)',
-  spacing: 10,
-};
-
+/** Quartz + light/dark scheme parts. Colors come from scout.css (--ag-*). */
 const light = themeQuartz.withPart(colorSchemeLightCold).withParams({
-  ...sharedParams,
-  backgroundColor: 'var(--ns-bg-elevated)',
-  foregroundColor: 'var(--ns-fg)',
-  headerBackgroundColor: 'var(--ns-grid-header)',
-  headerTextColor: 'var(--ns-fg-muted)',
-  rowHoverColor: 'var(--ns-grid-row-hover)',
+  spacing: 10,
 });
 
 const dark = themeQuartz.withPart(colorSchemeDarkBlue).withParams({
-  ...sharedParams,
-  backgroundColor: 'var(--ns-bg-elevated)',
-  foregroundColor: 'var(--ns-fg)',
-  headerBackgroundColor: 'var(--ns-grid-header)',
-  headerTextColor: 'var(--ns-fg-muted)',
-  rowHoverColor: 'var(--ns-grid-row-hover)',
+  spacing: 10,
 });
 
 export function scoutGridThemeFor(mode: ThemeMode) {

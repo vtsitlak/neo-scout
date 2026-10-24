@@ -32,7 +32,7 @@ const emptyInquiry = (): ContactInquiry => ({
 });
 
 const fieldControlClass =
-  'w-full rounded-md border bg-[var(--ns-bg-elevated)] px-3 py-2 text-sm text-[var(--ns-fg)]';
+  'w-full rounded-md border bg-ns-bg-elevated px-3 py-2 text-sm text-ns-fg';
 
 @Component({
   selector: 'neo-contact',
@@ -89,7 +89,7 @@ export class Contact {
   protected fieldClass(field: FieldTree<string>): string {
     const border = this.fieldError(field)
       ? 'border-red-400'
-      : 'border-[var(--ns-border)]';
+      : 'border-ns-border';
     return `${fieldControlClass} ${border}`;
   }
 

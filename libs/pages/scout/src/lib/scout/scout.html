@@ -1,11 +1,9 @@
 <section class="flex w-full flex-col gap-4" aria-label="Scout candidates">
   <header class="flex flex-col gap-1">
-    <h1
-      class="font-display m-0 text-2xl tracking-tight text-[var(--ns-fg)] sm:text-3xl"
-    >
+    <h1 class="font-display m-0 text-2xl tracking-tight text-ns-fg sm:text-3xl">
       Scout board
     </h1>
-    <p class="m-0 max-w-3xl text-sm leading-relaxed text-[var(--ns-fg-muted)]">
+    <p class="m-0 max-w-3xl text-sm leading-relaxed text-ns-fg-muted">
       Live NASA/JPL Scout candidates: each row is a near-Earth object with
       hazard scores, close-approach distance, brightness, and how long it has
       been observed. Search or filter the list, then open a row for the full
@@ -53,7 +51,7 @@
     aria-live="polite"
     aria-label="No Scout candidates available"
   >
-    <p class="max-w-md text-base text-[var(--ns-fg-muted)]">
+    <p class="max-w-md text-base text-ns-fg-muted">
       No near-Earth objects were found right now. Check back shortly, or refresh
       to try again.
     </p>
@@ -81,7 +79,7 @@
     />
 
     <div
-      class="scout-grid-footer flex items-center justify-between gap-3 border-t border-[var(--ns-border)] bg-[var(--ns-bg-elevated)] px-3 py-2 text-sm text-[var(--ns-fg-muted)]"
+      class="scout-grid-footer flex items-center justify-between gap-3 border-t border-ns-border px-3 py-2 text-sm text-ns-fg-muted"
       role="status"
       aria-live="polite"
       [attr.aria-label]="rowSummary()"
