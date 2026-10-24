@@ -1,12 +1,15 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
+import { ZodError } from 'zod';
 import { ScoutApiResponse } from './models/scout-api.model';
+import { ScoutApiResponseSchema } from './models/scout-api.schema';
 import { ScoutApiError } from './scout-api.error';
 import { SCOUT_API_URL } from './scout-api.tokens';
 
 /**
  * Thin HTTP client for the NASA/JPL Scout candidate list.
+ * Parses responses with Zod so callers receive validated {@link ScoutApiResponse}.
  * Filtering, search, and pagination belong in a SignalStore consumer — not here.
  */
 @Injectable({ providedIn: 'root' })
@@ -15,18 +18,25 @@ export class ScoutApiService {
   readonly #url = inject(SCOUT_API_URL);
 
   getCandidates(): Observable<ScoutApiResponse> {
-    return this.#http
-      .get<ScoutApiResponse>(this.#url)
-      .pipe(
-        catchError((error: unknown) =>
-          throwError(() => this.#toScoutApiError(error)),
-        ),
-      );
+    return this.#http.get<unknown>(this.#url).pipe(
+      map((raw) => ScoutApiResponseSchema.parse(raw)),
+      catchError((error: unknown) =>
+        throwError(() => this.#toScoutApiError(error)),
+      ),
+    );
   }
 
   #toScoutApiError(error: unknown): ScoutApiError {
     if (error instanceof ScoutApiError) {
       return error;
+    }
+
+    if (error instanceof ZodError) {
+      return new ScoutApiError(
+        'Scout API response failed validation',
+        null,
+        error,
+      );
     }
 
     if (error instanceof HttpErrorResponse) {

@@ -3,7 +3,42 @@
   width: 100%;
 }
 
+/*
+  Bridge NEO Scout semantic tokens (from @theme inline / :root|.dark)
+  into AG Grid Theming API CSS parameters. Colors live here — not in
+  scout-grid.theme.ts — so light/dark flips with --ns-* automatically.
+*/
+/* Match Contact cards / form panels (`rounded-lg` = 0.5rem). */
+.scout-grid-shell {
+  overflow: hidden;
+  border: 1px solid var(--color-ns-border);
+  border-radius: 0.5rem;
+  background: var(--color-ns-bg-elevated);
+}
+
 .scout-grid {
   height: min(70vh, 40rem);
   width: 100%;
+
+  --ag-font-family: var(--font-sans);
+  --ag-accent-color: var(--color-ns-primary);
+  --ag-border-color: var(--color-ns-border);
+  --ag-background-color: var(--color-ns-bg-elevated);
+  --ag-foreground-color: var(--color-ns-fg);
+  --ag-header-background-color: var(--color-ns-grid-header);
+  --ag-header-text-color: var(--color-ns-fg-muted);
+  --ag-row-hover-color: var(--color-ns-grid-row-hover);
+  --ag-border-radius: 0.5rem;
+  /* Top corners only — footer owns the bottom radius of the card. */
+  --ag-wrapper-border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Shell already draws the outer border — avoid a double edge. */
+.scout-grid-shell .scout-grid {
+  --ag-wrapper-border: none;
+}
+
+.scout-grid-footer {
+  border-radius: 0 0 0.5rem 0.5rem;
+  background: var(--color-ns-bg-elevated);
 }
